@@ -4,7 +4,7 @@ Author: akaranam
 Description: This module takes in a domain, and creates plausible archetypes for the domain.
 """
 
-from llm_wrapper import LLMWrapper
+from utils.llm_wrapper import LLMWrapper
 import os
 import pickle
 
