@@ -5,5 +5,13 @@ Description: This module contains the classes for the overall elicitation enviro
 """
 
 class ElicitationEnvironment:
-    def __init__(self, agents, elicitation_prompt):
-        pass
+    def __init__(self, agents):
+        self.all_agents = agents
+    
+    def run_questioner(self):
+        for agent in self.all_agents:
+            agent.ask_question()
+    
+
+
+

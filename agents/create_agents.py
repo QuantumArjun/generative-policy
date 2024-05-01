@@ -4,7 +4,7 @@ Author: akaranam
 Description: This module batch creates agents
 """
 
-def batch_create_agents(agent_class, system_prompts, *args, **kwargs):
+def batch_create_agents(agent_class, system_prompts, model_config, *args, **kwargs):
     """
     Batch create agents based on the system prompts provided
     :param agent_class: Class of the agent to create
@@ -13,6 +13,6 @@ def batch_create_agents(agent_class, system_prompts, *args, **kwargs):
     """
     agents = []
     for prompt in system_prompts:
-        agent = agent_class(prompt, *args, **kwargs)
+        agent = agent_class(prompt, model_config, *args, **kwargs)
         agents.append(agent)
     return agents
