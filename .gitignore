@@ -10,6 +10,7 @@ __pycache__/
 .Python
 env/
 .env
+.VSCodeCounter/
 build/
 develop-eggs/
 dist/

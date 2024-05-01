@@ -37,6 +37,18 @@ if __name__ == "__main__":
     print_agents(agent_list)
 
     print(elicitation_environment.ratings_matrix)
+
+    #TODO - Elicitaiton Part:
+    #Implement Logging 
+    #Implement saving along different parts of the process
+    #Fix rating so that you can pass an arg to rate the max 
+    #Log all agent interactions, and see where we can fix 
+    #Tone down the archetypes, none of them change their opinion 
+
+    #TODO - Creating Digital Representatives:
+    #Create a digital twin for each agent
+
+
     
 
 
