@@ -1,3 +1,4 @@
+from typing import List
 import os
 from dotenv import load_dotenv
 from agents.persona_generator import PersonaGenerator
@@ -7,15 +8,21 @@ from agents.agent import Agent
 from agents.human_simul import HumanSimulator
 from environments.elicitation import ElicitationEnvironment
 
-def print_agents(agent_list):
-    for agent in agent_list:
-        print(f"Agent Archetype: {agent.system_prompt}")
-        # print(f"Agent Conversation History:")
-        # for message in agent.history:
-        #     print(message)
-        print("\n")
-        print(f"Agent Initial Opinion: {agent.initial_opinion}")
-        print(f"Agent Final Opinion: {agent.final_opinion}")
+def print_agents(agent_list: List[Agent]) -> None:
+    """
+    Prints information about each agent in a given list of agents.
+
+    Args:
+        agent_list (List[Agent]): A list of agent objects.
+
+    Returns:
+        None. The function only prints the information about each agent.
+    """
+    if agent_list is not None and len(agent_list) > 0:
+        for agent in agent_list:
+            print("Agent Archetype: {}\n".format(agent.system_prompt))
+            print("Agent Initial Opinion: {}".format(agent.initial_opinion))
+            print("Agent Final Opinion: {}\n".format(agent.final_opinion))
 
 if __name__ == "__main__":
     # Load environment variables and create config
