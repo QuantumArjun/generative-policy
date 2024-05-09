@@ -1,3 +1,5 @@
+import logging
+import numpy as np
 """
 Module: elicitation.py
 Author: akaranam
@@ -25,39 +27,41 @@ class ElicitationEnvironment:
     
     def run_elicitation(self) -> None:
         """
-        Run overall the elicitation process
+        Run the overall elicitation process
         """
-        print("Running Question Session")
+        logging.info("Running Question Session")
         self.run_question_session()
 
-        print("Eliciting Opinions")
-        self.elicit_opinions("initial")
+        logging.info("Eliciting Opinions")
+        self.elicit_initial_opinions()
 
-        print("Gathering neighbor opinions")
+        logging.info("Gathering neighbor opinions")
         self.ratings_matrix = self.run_neighbor_opinions()
 
-        print("Eliciting Final Opinions")
-        self.elicit_opinions("final")
+        logging.info("Eliciting Final Opinions")
+        self.elicit_final_opinions()
 
-        print("Elicitation Complete")
+        logging.info("Elicitation Complete")
 
 
-    def elicit_opinions(self, flag) -> None:
+    def elicit_initial_opinions(self) -> None:
         """
-        Elicit opinions from the agents
+        Elicit initial opinions from the agents
         """
-        if flag == "initial":
-            ask_key_question = f"Please provide your opinion on the following question: {self.key_question}"
-            for agent in self.agent_list:
-                agent.initial_opinion = agent.respond(ask_key_question) 
+        ask_key_question = f"Please provide your opinion on the following question: {self.key_question}"
+        for agent in self.agent_list:
+            agent.initial_opinion = agent.respond(ask_key_question) 
 
-        elif flag == "final":
-            ask_key_question = f"After seeing those other opinions, please reflect on your original opinion, and provide your final opinion on the following question: {self.key_question}"
-            for agent in self.agent_list:
-                agent.final_opinion = agent.respond(ask_key_question) 
+    def elicit_final_opinions(self) -> None:
+        """
+        Elicit final opinions from the agents
+        """
+        ask_key_question = f"After seeing those other opinions, please reflect on your original opinion, and provide your final opinion on the following question: {self.key_question}"
+        for agent in self.agent_list:
+            agent.final_opinion = agent.respond(ask_key_question) 
 
     
-    def run_neighbor_opinions(self) -> list[list[int]]:
+    def run_neighbor_opinions(self) -> np.ndarray:
         """
         Run the neighbor opinion elicitation process (Similar to Pol.is)
         :return: A matrix of ratings between agents
@@ -65,12 +69,12 @@ class ElicitationEnvironment:
         n_agents = len(self.agent_list)
 
         # Initialize the matrix with None, indicating no rating
-        ratings = [[None] * n_agents for _ in range(n_agents)]
+        ratings = np.full((n_agents, n_agents), None)
 
         for round_index in range(self.num_polis_rounds):
             # Create a random shuffle of agents to determine who rates whom in this round
-            indices = list(range(n_agents))
-            random.shuffle(indices)
+            indices = np.arange(n_agents)
+            np.random.shuffle(indices)
 
             # Assign each agent to rate the next in the shuffled list
             for i in range(n_agents):
@@ -81,11 +85,11 @@ class ElicitationEnvironment:
                     ratee_agent = self.agent_list[ratee_index]
                     rating = rater_agent.rate_opinion(ratee_agent.initial_opinion)
 
-                    ratings[rater_index][ratee_index] = rating
+                    ratings[rater_index, ratee_index] = rating
 
         return ratings
 
-    def run_question_session(self) -> None:
+    def run_question_session(self, num_rounds: int) -> None:
         """
         Run a question session with the provided agent
         :param agent: The agent to question
@@ -95,7 +99,7 @@ class ElicitationEnvironment:
         self.create_instructions()
         self.create_questioner()
         for agent in self.agent_list:
-            self.question_agent(agent, self.num_rounds)
+            self.question_agent(agent, num_rounds)
             self.questioner_agent.reset_history()
     
     def create_instructions(self) -> None:
