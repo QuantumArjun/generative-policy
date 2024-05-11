@@ -11,8 +11,11 @@ class DigitalRepresentative(Agent):
         super().__init__(system_prompt=system_prompt, model_config=model_config)
         self.human_agent = human_agent
         self.history = []
-        self.initial_opinion = ""
-        self.final_opinion = ""
+    
+    def initialize_representative():
+        """
+        Use the human's conversation to create a digital representative
+        """
 
 
 

@@ -1,3 +1,7 @@
+# Cache and Log Files
+personas/
+saved_agents/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

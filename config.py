@@ -25,3 +25,18 @@ class Config:
             }
         else:
             raise ValueError("Invalid model type specified.")
+    
+    @property
+    def serialize(self):
+        if self.model_type == "OpenAI":
+            return {
+                "model_type": self.model_type,
+                "model": self.model_name
+            }
+        elif self.model_type == "Claude":
+            return {
+                "model_type": self.model_type,
+                "model": self.model_name
+            }
+        else:
+            raise ValueError("Invalid model type specified.")

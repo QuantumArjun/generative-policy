@@ -22,26 +22,24 @@ class ElicitationEnvironment:
 
         self.questioner_instructions = None
         self.questioner_agent = None
-
+ 
         self.ratings_matrix = None
     
     def run_elicitation(self) -> None:
         """
         Run the overall elicitation process
         """
-        logging.info("Running Question Session")
-        self.run_question_session()
+        print("Running Question Session")
+        self.run_question_session(self.num_rounds)
 
-        logging.info("Eliciting Opinions")
+        print("Eliciting Opinions")
         self.elicit_initial_opinions()
 
-        logging.info("Gathering neighbor opinions")
+        print("Gathering neighbor opinions")
         self.ratings_matrix = self.run_neighbor_opinions()
 
-        logging.info("Eliciting Final Opinions")
+        print("Eliciting Final Opinions")
         self.elicit_final_opinions()
-
-        logging.info("Elicitation Complete")
 
 
     def elicit_initial_opinions(self) -> None:
