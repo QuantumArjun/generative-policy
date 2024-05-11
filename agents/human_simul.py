@@ -30,8 +30,8 @@ class HumanSimulator(Agent):
         Returns:
             int: The rating of the opinion. 1 for agree, 0 for disagree, -1 for other.
         """
-        user_message = f"Based on your beliefs, please rate the following opinion: {opinion}. Output only one of two options: 'agree' or 'disagree'."
-        response = self.respond(user_message=user_message)
+        user_message = f"Based on your beliefs, please rate the following opinion: {opinion}. Output only one of two words, and nothing else: 'agree' or 'disagree'."
+        response = self.respond(user_message=user_message, q_tag="<Someone Else's Opinion> ", a_tag="<Your Rating>")
 
         if response == "agree":
             return 1

@@ -48,7 +48,7 @@ class ElicitationEnvironment:
         """
         ask_key_question = f"Please provide your opinion on the following question: {self.key_question}"
         for agent in self.agent_list:
-            agent.initial_opinion = agent.respond(ask_key_question) 
+            agent.initial_opinion = agent.respond(ask_key_question, q_tag = "<Initial Opinion Question>", a_tag = "<Initial Opinion>") 
 
     def elicit_final_opinions(self) -> None:
         """
@@ -56,7 +56,7 @@ class ElicitationEnvironment:
         """
         ask_key_question = f"After seeing those other opinions, please reflect on your original opinion, and provide your final opinion on the following question: {self.key_question}"
         for agent in self.agent_list:
-            agent.final_opinion = agent.respond(ask_key_question) 
+            agent.final_opinion = agent.respond(ask_key_question, q_tag = "<Final Opinion Question>", a_tag = "<Final Opinion>") 
 
     
     def run_neighbor_opinions(self) -> np.ndarray:
@@ -131,7 +131,7 @@ class ElicitationEnvironment:
         
         for _ in range(num_rounds):
             question = self.questioner_agent.respond(response)
-            response = agent.respond(question)
+            response = agent.respond(question,  q_tag = "<Question>", a_tag = "<Your Answer>")
     
 
 

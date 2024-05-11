@@ -18,13 +18,15 @@ class Agent:
             self.model_config = model_config
             self.history = []  # Initialize history
     
-    def respond(self, user_message="", use_history=True, add_to_history=True) -> str:
+    def respond(self, user_message="", use_history=True, add_to_history=True, q_tag = None, a_tag = None) -> str:
         """
         Generate a response to the user message
         :param user_message: The message from the user
         :return: The response from the agent
         """
         if add_to_history and user_message != "":
+            if q_tag is not None:
+                user_message = q_tag + user_message
             self.history.append(user_message)
 
         if use_history and len(self.history) > 0:
@@ -33,7 +35,10 @@ class Agent:
         response = LLMWrapper(self.model_config).generate_text(system_prompt=self.system_prompt, user_message=user_message)
 
         if add_to_history:
-            self.history.append(response)
+            if a_tag is not None:
+                self.history.append(a_tag + response)
+            else:
+                self.history.append(response)
         
         return response
     
