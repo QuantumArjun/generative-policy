@@ -5,14 +5,19 @@ Description: This module contains the classes for the digital representatives of
 """
 
 from agents.agent import Agent
+from utils import name_generator as NameGenerator
 
 class DigitalRepresentative(Agent):
-    def __init__(self, model_config, human_agent):
+    def __init__(self, model_config, human_agent, name=None):
         """
         Initializes a DigitalRepresentative object with the given human agent.
         """
         super().__init__(system_prompt=self.initialize_representative(human_agent), model_config=model_config)
         self.history = []
+        if name:
+            self.name = name
+        else:  
+            self.name = NameGenerator.generate_random_first_name()
     
     def initialize_representative(human_agent):
         """
