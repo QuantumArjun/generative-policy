@@ -54,7 +54,7 @@ class ElicitationEnvironment:
         """
         Elicit final opinions from the agents
         """
-        ask_key_question = f"After seeing those other opinions, please reflect on your original opinion, and provide your final opinion on the following question: {self.key_question}"
+        ask_key_question = f"After seeing those other opinions, please reflect on your original opinion, and provide your final opinion on the following question: {self.key_question}. Feel free to explain your thoughts."
         for agent in self.agent_list:
             agent.final_opinion = agent.respond(ask_key_question, q_tag = "<Final Opinion Question>", a_tag = "<Final Opinion>") 
 

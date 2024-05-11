@@ -19,37 +19,38 @@ if __name__ == "__main__":
 
     #Code to Create Personas, currently commented out
 
-    print("Creating personas...")
-    persona_list = PersonaGenerator(domain=domain, model_config=model_config, num_personas=5).generate_personas()
-    agent_list = batch_create_agents(agent_class=HumanSimulator, model_config=model_config, system_prompts=persona_list)
-    print("Personas created!\n")
+    # print("Creating personas...")
+    # persona_list = PersonaGenerator(domain=domain, model_config=model_config, num_personas=5).generate_personas()
+    # agent_list = batch_create_agents(agent_class=HumanSimulator, model_config=model_config, system_prompts=persona_list)
+    # print("Personas created!\n")
 
-    print("Spinning up elicitation environment...")
-    elicitation_environment = ElicitationEnvironment(domain=domain, key_question=key_question, instruction_model_config=model_config, questioner_model_config=model_config, agent_list=agent_list)
-    elicitation_environment.run_elicitation()
-    print("Elicitation complete!\n")
+    # print("Spinning up elicitation environment...")
+    # elicitation_environment = ElicitationEnvironment(domain=domain, key_question=key_question, instruction_model_config=model_config, questioner_model_config=model_config, agent_list=agent_list)
+    # elicitation_environment.run_elicitation()
+    # print("Elicitation complete!\n")
 
-    batch_save_agents(agent_list)
+    # batch_save_agents(agent_list)
 
-    # agent_list = batch_load_agents("saved_agents/batch_5")
-    # print_agents([agent_list[0]])
+    agent_list = batch_load_agents("saved_agents/batch_10")
 
-    # print("Creating digital representatives...")
-    # digital_representatives = []
-    # for agent in agent_list:
-    #     digital_rep = DigitalRepresentative(system_prompt=agent.system_prompt, model_config=model_config, human_agent=agent)
-    #     digital_rep.initialize_representative(agent)
-    #     digital_representatives.append(digital_rep)
+    print("Creating digital representatives...")
+    digital_representatives = []
+    for agent in agent_list:
+        digital_rep = DigitalRepresentative(model_config = model_config, human_agent=agent)
+        digital_representatives.append(digital_rep)
 
     #TODO - Elicitaiton Part:
+    #Minor 
+    # Fix rating so that you can pass an arg to rate the max 
+    # Pretty print the history for each agent 
+
+    #Major
     #Tone down the archetypes, none of them change their opinion 
     #Think of how and if I should demarcate the agents 
 
     # Fix rating so that you can pass an arg to rate the max 
     # Pretty print the history for each agent 
 
-    #TODO - Creating Digital Representatives:
-    #Create a digital twin for each agent
 
 
     

@@ -7,15 +7,24 @@ Description: This module contains the classes for the digital representatives of
 from agents.agent import Agent
 
 class DigitalRepresentative(Agent):
-    def __init__(self, system_prompt, model_config, human_agent):
-        super().__init__(system_prompt=system_prompt, model_config=model_config)
-        self.human_agent = human_agent
+    def __init__(self, model_config, human_agent):
+        """
+        Initializes a DigitalRepresentative object with the given human agent.
+        """
+        super().__init__(system_prompt=self.initialize_representative(human_agent), model_config=model_config)
         self.history = []
     
-    def initialize_representative():
+    def initialize_representative(human_agent):
         """
         Use the human's conversation to create a digital representative
         """
+
+        system_prompt = "You are trying to emulate a human agent. The human agent you are trying to emulate has the following conversation history: \n"
+        for message in human_agent.history:
+            system_prompt += f"{message}\n"
+        
+        return system_prompt
+
 
 
 
