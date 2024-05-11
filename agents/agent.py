@@ -8,12 +8,15 @@ from utils.llm_wrapper import LLMWrapper
 import json
 
 class Agent:
-    def __init__(self, system_prompt, model_config, load_from=None):
+    def __init__(self, system_prompt=None, model_config=None, load_from=None):
         if load_from is not None:
             self.load_agent(load_from)
-        else: 
+        else:
+            if system_prompt is None or model_config is None:
+                raise ValueError("system_prompt and model_config must be provided if not loading from file.")
             self.system_prompt = system_prompt
             self.model_config = model_config
+            self.history = []  # Initialize history
     
     def respond(self, user_message="", use_history=True, add_to_history=True) -> str:
         """
@@ -58,9 +61,12 @@ class Agent:
         Load the agent from a file
         :param path: The path to load the agent
         """
-        with open(path, "r") as f:
-            lines = f.readlines()
-            self.system_prompt = lines[0].strip()
-            self.history = lines[1].strip().split("\n")
-            self.model_config = eval(lines[2])
+        with open(path, "r") as file:
+            agent_data = json.load(file)
+        
+        self.system_prompt = agent_data["system_prompt"]
+        self.model_config = agent_data["model_config"]
+        self.history = agent_data["history"]
+
+        return self
 

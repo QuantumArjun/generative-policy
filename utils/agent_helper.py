@@ -54,6 +54,18 @@ def batch_save_agents(agents):
         agent_path = os.path.join(folder_path, f"agent_{i}.json")
         agent.save_agent(agent_path)
 
+def batch_load_agents(batch_folder):
+    """
+    Batch load agents from a folder
+    :param batch_folder: The folder containing the agents
+    :return: List of agents
+    """
+    agents = []
+    for file_name in os.listdir(batch_folder):
+        file_path = os.path.join(batch_folder, file_name)
+        agent = Agent(load_from=file_path)
+        agents.append(agent)
+    return agents
 
 def print_agents(agent_list: List[Agent]) -> None:
     """
@@ -68,5 +80,9 @@ def print_agents(agent_list: List[Agent]) -> None:
     if agent_list is not None and len(agent_list) > 0:
         for agent in agent_list:
             print("Agent Archetype: {}\n".format(agent.system_prompt))
-            print("Agent Initial Opinion: {}".format(agent.initial_opinion))
-            print("Agent Final Opinion: {}\n".format(agent.final_opinion))
+            if hasattr(agent, 'initial_opinion'):
+                print("Agent Initial Opinion: {}".format(agent.initial_opinion))
+            if hasattr(agent, 'final_opinion'):
+                print("Agent Final Opinion: {}\n".format(agent.final_opinion))
+            if hasattr(agent, 'history'):
+                print("Agent History: {}\n".format(agent.history))
