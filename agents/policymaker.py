@@ -52,10 +52,6 @@ class Policymaker(Agent):
         approval_percentage = sum(value.lower().count('approve') for value in response_dict.values())
 
         return response_dict, approval_percentage
-        
-
-
-            # Process response and assign scores
 
     def ranked_scoring():
         pass
