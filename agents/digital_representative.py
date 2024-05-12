@@ -5,7 +5,7 @@ Description: This module contains the classes for the digital representatives of
 """
 
 from agents.agent import Agent
-from utils import name_generator as NameGenerator
+from utils.name_generator import NameGenerator
 
 class DigitalRepresentative(Agent):
     def __init__(self, model_config, human_agent, name=None):
@@ -14,12 +14,9 @@ class DigitalRepresentative(Agent):
         """
         super().__init__(system_prompt=self.initialize_representative(human_agent), model_config=model_config)
         self.history = []
-        if name:
-            self.name = name
-        else:  
-            self.name = NameGenerator.generate_random_first_name()
+        self.name = name
     
-    def initialize_representative(human_agent):
+    def initialize_representative(self, human_agent):
         """
         Use the human's conversation to create a digital representative
         """

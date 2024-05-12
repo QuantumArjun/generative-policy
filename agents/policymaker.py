@@ -23,15 +23,15 @@ class Policymaker(Agent):
         Evaluate the proposed policy based on various criteria.
         :param agent_list: List of agents to interact with for evaluation.
         :param policy: The proposed policy to evaluate.
-        :param prompt_type: The type of prompt to use for evaluation, from PromptType enum.
+        :param prompt_type: The type of prompt to use for evaluation, from ScoringSystem enum.
         """
 
-        if prompt_type == PromptType.APPROVAL:
+        if prompt_type == ScoringSystem.APPROVAL:
             return self.approval_scoring(agent_list, policy)
-        elif prompt_type == PromptType.RANKING:
+        elif prompt_type == ScoringSystem.RANKING:
             return self.ranked_scored(agent_list, policy)
         else:
-            raise ValueError("Invalid prompt type provided")
+            raise ValueError("Invalid scoring system provided")
 
     def approval_scoring(self, agent_list, policy): 
         """
@@ -44,9 +44,10 @@ class Policymaker(Agent):
         response_dict = {}
 
         for agent in agent_list:
+            print(f"Interacting with agent: {agent.name}")
             response = agent.respond(prompt, q_tag="Proposed Policy", a_tag="Your Response")
             while response not in ["Approve", "Disapprove"]:
-                response = agent.respond(prompt + "\n Invalid response, you must choose either 'Approve' or 'Disapprove'", q_tag="Proposed Policy", a_tag="Your Response")
+                response = agent.respond(prompt + "\n Invalid response, you must choose either 'Approve' or 'Disapprove'", add_to_history=False, q_tag="Proposed Policy", a_tag="Your Response")
             response_dict[agent.name] = response
         
         approval_percentage = sum(value.lower().count('approve') for value in response_dict.values())
@@ -71,6 +72,6 @@ class Policymaker(Agent):
         """
         pass
 
-class PromptType(Enum):
+class ScoringSystem(Enum):
     APPROVAL = 1
     RANKING = 2

@@ -1,12 +1,15 @@
 from typing import List
 import os
+import sys
 from dotenv import load_dotenv
 from agents.persona_generator import PersonaGenerator
 from config import Config
-from utils.agent_helper import batch_create_agents, batch_save_agents, batch_load_agents, print_agents
+from utils.agent_helper import batch_create_agents, batch_save_agents, batch_load_agents, print_agents, batch_create_representatives
 from agents.agent import Agent
 from agents.human_simul import HumanSimulator
+from agents.policymaker import Policymaker, ScoringSystem
 from agents.digital_representative import DigitalRepresentative
+from utils.name_generator import NameGenerator
 from environments.elicitation import ElicitationEnvironment
 
 if __name__ == "__main__":
@@ -34,10 +37,16 @@ if __name__ == "__main__":
     agent_list = batch_load_agents("saved_agents/batch_10")
 
     print("Creating digital representatives...")
-    digital_representatives = []
-    for agent in agent_list:
-        digital_rep = DigitalRepresentative(model_config = model_config, human_agent=agent)
-        digital_representatives.append(digital_rep)
+    digital_representatives = batch_create_representatives(agent_list, model_config)
+
+    for rep in digital_representatives:
+        print(rep.name)
+        print(rep.system_prompt)
+
+    policymaker = Policymaker(model_config=model_config, system_prompt="You are a policymaker. You will be interacting with digital representatives to create optimal policies.")
+    results_dict, result = policymaker.evaluate_policy(digital_representatives, "We should ban all guns in America and confiscate every gun", ScoringSystem.APPROVAL)
+
+    print(results_dict)
 
     #TODO - Elicitaiton Part:
     #Minor 

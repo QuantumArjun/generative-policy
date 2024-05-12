@@ -9,6 +9,9 @@ import os
 import json
 from typing import List
 from agents.agent import Agent
+from agents.digital_representative import DigitalRepresentative
+from utils.name_generator import NameGenerator
+from config import Config
 
 def batch_create_agents(agent_class, system_prompts, model_config, *args, **kwargs):
     """
@@ -23,7 +26,7 @@ def batch_create_agents(agent_class, system_prompts, model_config, *args, **kwar
         agents.append(agent)
     return agents
 
-def batch_save_agents(agents):
+def batch_save_agents(agents: List[Agent]):
     """
     Batch save agents to files in a new folder for each batch.
     Folder naming follows 'saved_agents_batch_X' where X is an incrementing integer.
@@ -54,7 +57,7 @@ def batch_save_agents(agents):
         agent_path = os.path.join(folder_path, f"agent_{i}.json")
         agent.save_agent(agent_path)
 
-def batch_load_agents(batch_folder):
+def batch_load_agents(batch_folder: str):
     """
     Batch load agents from a folder
     :param batch_folder: The folder containing the agents
@@ -66,6 +69,21 @@ def batch_load_agents(batch_folder):
         agent = Agent(load_from=file_path)
         agents.append(agent)
     return agents
+
+def batch_create_representatives(agent_list: List[Agent], model_config: Config) -> List[DigitalRepresentative]:
+    """
+    Batch create digital representatives based on the given list of agents.
+    :param agent_list: List of agents to create digital representatives for.
+    :param model_config: The model configuration to use for the digital representatives.
+    :return: List of digital representatives.
+    """
+    rep_list = []
+    name_gen = NameGenerator()
+    for agent in agent_list:
+        digital_rep = DigitalRepresentative(model_config = model_config, human_agent=agent, name=name_gen.generate_random_first_name())
+        rep_list.append(digital_rep)
+    
+    return rep_list
 
 def print_agents(agent_list: List[Agent]) -> None:
     """
