@@ -32,7 +32,7 @@ class Policymaker(Agent):
         assistant_system_prompt = "You are an assistant helping come up with creative policy solutions to the domain of {}.".format(domain)
         
         # Initial Prompt for the LLM
-        user_message = "Come up policy statements. Make sure to begin each policy statement with <Statement>" 
+        user_message = "Come up with policy statements. Make sure to begin each policy statement with <Statement>" 
         
         response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
         policy_list = [statement.strip() for statement in response.split("<Statement>") if statement.strip()]
@@ -73,7 +73,7 @@ class Policymaker(Agent):
         
         uniqueness_system_prompt = "You are an assistant that helps decide if a new policy statement is different those already generated."
         user_message = "Give these current policy statements, {} and the new policy statement, {}, output true if the new policy statement different than all of the current policies,\
-            or false if it is a duplicate. Also output false if the policy is not a valid policy. Output only one of two words: 'true' or 'false".format(statement_list, policy_statement)
+            or false if it is a duplicate. Also output false if the policy is not a valid policy. Output only one of two words: 'true' or 'false'".format(statement_list, policy_statement)
         
         response = LLMWrapper(self.model_config).generate_text(system_prompt=uniqueness_system_prompt, user_message=user_message)
         print(policy_statement, response)
