@@ -14,7 +14,7 @@ from environments.elicitation import ElicitationEnvironment
 
 if __name__ == "__main__":
     # Load environment variables and create config
-    load_dotenv()
+    load_dotenv(dotenv_path='/.env')
 
     model_config = Config(model_type="OpenAI", model_name="gpt-3.5-turbo")
     domain = "Gun Control in America"
@@ -34,19 +34,13 @@ if __name__ == "__main__":
 
     # batch_save_agents(agent_list)
 
-    agent_list = batch_load_agents("saved_agents/batch_10")
+    # agent_list = batch_load_agents("saved_agents/batch_10")
 
-    print("Creating digital representatives...")
-    digital_representatives = batch_create_representatives(agent_list, model_config)
+    # print("Creating digital representatives...")
+    # digital_representatives = batch_create_representatives(agent_list, model_config)
 
-    for rep in digital_representatives:
-        print(rep.name)
-        print(rep.system_prompt)
-
-    policymaker = Policymaker(model_config=model_config, system_prompt="You are a policymaker. You will be interacting with digital representatives to create optimal policies.")
-    results_dict, result = policymaker.evaluate_policy(digital_representatives, "We should ban all guns in America and confiscate every gun", ScoringSystem.APPROVAL)
-
-    print(results_dict)
+    policymaker = Policymaker(model_config=model_config)
+    policymaker.create_policy_statements(domain)
 
     #TODO - Elicitaiton Part:
     #Minor 

@@ -13,7 +13,9 @@ class Config:
 
     @property
     def model_config(self):
+        print("Running")
         if self.model_type == "OpenAI":
+            print(os.environ.get("OPENAI_API_KEY"))
             return {
                 "api_key": os.environ.get("OPENAI_API_KEY"),
                 "model": self.model_name

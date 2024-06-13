@@ -6,17 +6,40 @@ Description: This is the general module for the policymaker agent, which will in
 
 from agents.agent import Agent
 from enum import Enum
+from utils.llm_wrapper import LLMWrapper
 
 
 class Policymaker(Agent):
-    def __init__(self, model_config, system_prompt):
-        super().__init__(model_config, system_prompt)
+    def __init__(self, model_config):
+        system_prompt = "You are a policymaker. You will be interacting with digital representatives to create optimal policies."
+        super().__init__(model_config=model_config, system_prompt=system_prompt)
 
     def propose_policy(self):
         """
         Propose a policy based on the input from the human agent
         """
         pass
+
+    def create_policy_statements(self, domain) -> list: 
+        """
+        Given a domain, create as many unique policy statements as possible. 
+        :param domain: The domain to create policy statements for
+        return: List of policy statements
+        """
+        
+        # Initial Prompt for the LLM
+        assistant_system_prompt = "You are an assistant helping come up with creative policy solutions to the domain of {}.".format(domain)
+        user_message = "Come up policy statements. Make sure to begin each policy statement with <Statement>" 
+        
+        response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
+        policy_list = [statement.strip() for statement in response.split("<Statement>") if statement.strip()]
+        print(policy_list)
+
+         
+        
+        
+        
+    
 
     def evaluate_policy(self, agent_list, policy, prompt_type):
         """
