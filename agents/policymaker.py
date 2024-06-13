@@ -20,12 +20,14 @@ class Policymaker(Agent):
         """
         pass
 
-    def create_policy_statements(self, domain) -> list: 
+    def create_policy_statements(self, domain, statement_limit=20) -> list: 
         """
         Given a domain, create as many unique policy statements as possible. 
         :param domain: The domain to create policy statements for
         return: List of policy statements
         """
+        
+        policy_set = set("Do Nothing")
         
         assistant_system_prompt = "You are an assistant helping come up with creative policy solutions to the domain of {}.".format(domain)
         
@@ -35,22 +37,53 @@ class Policymaker(Agent):
         response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
         policy_list = [statement.strip() for statement in response.split("<Statement>") if statement.strip()]
         
-        print("Policy List: ", policy_list)
+        for policy_statement in policy_list:
+            if self.is_unique(policy_statement, policy_set):
+                policy_set.add(policy_statement)
+            else: 
+                print("Policy statement already exists: ", policy_statement)
         
         # Chaining to get more responses 
-        user_message = "Your goal is to come up with policy statements that are creative and innovative.  \
-            So far, you have come up with the following policy statements: " + ", ".join(policy_list) + ". \
-            Please come up with additional policy statements. \
-            Make sure to begin each policy statement with <Statement>"
+        while len(policy_set) < statement_limit:
+            user_message = "Your goal is to come up with policy statements that are creative and innovative.  \
+                So far, you have come up with the following policy statements: " + ", ".join(policy_list) + ". \
+                Please come up with additional policy statements. \
+                Make sure to begin each policy statement with <Statement>"
+            
+            response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
+            policy_list = [statement.strip() for statement in response.split("<Statement>") if statement.strip()]
+            
+            for policy_statement in policy_list:
+                if self.is_unique(policy_statement, policy_set):
+                    policy_set.add(policy_statement)
+                else: 
+                    print("Policy statement already exists: ", policy_statement)
         
-        response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
-        policy_list = [statement.strip() for statement in response.split("<Statement>") if statement.strip()]
-        # policy_list = policy_list + [statement.strip() for statement in response.split("<Statement>") if statement.strip()]
+        print(list(policy_set))
+        return list(policy_set)
         
-        print("Policy List: ", policy_list)
     
-    def check_uniquenss(self, policy_list):
-        pass
+    def is_unique(self, policy_statement, statement_list):
+        """
+        Given a set of policy statements, check if the new policy statement is unique
+        :param: policy_statement: The new policy statement to check
+        :param: statement_list: The set of policy statements
+        :return: True if the policy statement is unique, False otherwise
+        """
+        
+        uniqueness_system_prompt = "You are an assistant that helps decide if a new policy statement is different those already generated."
+        user_message = "Give these current policy statements, {} and the new policy statement, {}, output true if the new policy statement different than all of the current policies,\
+            or false if it is a duplicate. Also output false if the policy is not a valid policy. Output only one of two words: 'true' or 'false".format(statement_list, policy_statement)
+        
+        response = LLMWrapper(self.model_config).generate_text(system_prompt=uniqueness_system_prompt, user_message=user_message)
+        print(policy_statement, response)
+        
+        if response == "true":
+            return True
+        else:
+            return False
+        
+        
         
 
          
