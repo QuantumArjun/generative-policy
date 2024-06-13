@@ -27,13 +27,31 @@ class Policymaker(Agent):
         return: List of policy statements
         """
         
-        # Initial Prompt for the LLM
         assistant_system_prompt = "You are an assistant helping come up with creative policy solutions to the domain of {}.".format(domain)
+        
+        # Initial Prompt for the LLM
         user_message = "Come up policy statements. Make sure to begin each policy statement with <Statement>" 
         
         response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
         policy_list = [statement.strip() for statement in response.split("<Statement>") if statement.strip()]
-        print(policy_list)
+        
+        print("Policy List: ", policy_list)
+        
+        # Chaining to get more responses 
+        user_message = "Your goal is to come up with policy statements that are creative and innovative.  \
+            So far, you have come up with the following policy statements: " + ", ".join(policy_list) + ". \
+            Please come up with additional policy statements. \
+            Make sure to begin each policy statement with <Statement>"
+        
+        response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
+        policy_list = [statement.strip() for statement in response.split("<Statement>") if statement.strip()]
+        # policy_list = policy_list + [statement.strip() for statement in response.split("<Statement>") if statement.strip()]
+        
+        print("Policy List: ", policy_list)
+    
+    def check_uniquenss(self, policy_list):
+        pass
+        
 
          
         
