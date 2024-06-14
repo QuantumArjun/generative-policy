@@ -214,7 +214,7 @@ class PolicyStatementGenerator(Agent):
                     user_message = f"""
                         Your goal is to come up with policy statements that are creative and innovative.
                         Each policy statement has to fit under this axis: {axis}
-                        Each policy statement has to be addressed to: {stakeholder}
+                        Each policy statement has to be helping this stakeholder: {stakeholder}
                         So far, you have come up with the following policy statements: {", ".join(policy_list)}
                         Do not repeat any of these policy statements again.
                         Please come up with additional policy statements.
