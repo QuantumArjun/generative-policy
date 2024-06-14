@@ -10,6 +10,7 @@ import re
 
 from agents.agent import Agent
 from agents.policy_axes_generator import PolicyAxesGenerator
+from agents.policy_stakeholder_generator import PolicyStakeholderGenerator
 from enum import Enum
 from utils.llm_wrapper import LLMWrapper
 from config import Config
@@ -19,6 +20,7 @@ class PolicyStatementMethod(Enum):
     BASE = 1
     CHAINING = 2
     AXIS = 3
+    STAKEHOLDER = 4
 
 class PolicyStatementGenerator(Agent):
     """
@@ -49,7 +51,9 @@ class PolicyStatementGenerator(Agent):
         elif generation_method == PolicyStatementMethod.CHAINING:
             return self.create_policy_statements_chaining(domain, statement_limit)
         elif generation_method == PolicyStatementMethod.AXIS:
-            return self.create_policy_statements_axes(domain, statement_limit)
+            return self.create_policy_statements_along_axis(domain, statement_limit)
+        elif generation_method == PolicyStatementMethod.STAKEHOLDER:
+            return self.create_policy_statements_along_axis_and_stakeholder(domain, statement_limit)
         else:
             raise ValueError(f"Invalid generation method: {generation_method}")
     
@@ -104,10 +108,11 @@ class PolicyStatementGenerator(Agent):
         
         # Chaining to get more responses 
         while len(policy_set) < statement_limit:
-            user_message = "Your goal is to come up with policy statements that are creative and innovative.  \
-                So far, you have come up with the following policy statements: " + ", ".join(policy_list) + ". \
-                Please come up with additional policy statements. \
-                Make sure to begin each policy statement with <Statement>"
+            user_message = f"""Your goal is to come up with policy statements that are creative and innovative.
+                So far, you have come up with the following policy statements: {", ".join(policy_list)}.
+                Please come up with additional policy statements.
+                Make sure to begin each policy statement with <Statement>
+            """
             
             response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
             policy_list = [statement.strip() for statement in response.split("<Statement>") if statement.strip()]
@@ -121,7 +126,7 @@ class PolicyStatementGenerator(Agent):
         print(list(policy_set))
         return list(policy_set)
     
-    def create_policy_statements_along_axis(self, domain, statement_limit=50) -> list: 
+    def create_policy_statements_along_axis(self, domain, statement_limit=20) -> list: 
         """
         Given a domain, create as many unique policy statements as possible, exploring along pre-defined axes.
         :param domain: The domain to create policy statements for
@@ -170,7 +175,62 @@ class PolicyStatementGenerator(Agent):
                 print("Policy Statements", policy_set)
         print(list(policy_set))
         return list(policy_set)
-    
+
+    def create_policy_statements_along_axis_and_stakeholder(self, domain, statement_limit=20) -> list: 
+        """
+        Given a domain, create as many unique policy statements as possible, exploring along pre-defined axes and stakeholders.
+        :param domain: The domain to create policy statements for
+        return: List of policy statements
+        """
+        
+        policy_set = set()
+        
+        assistant_system_prompt = f"You are an assistant helping come up with creative policy solutions to the domain of {domain}."
+        user_message = f"""
+            Come up axes by which we evaluate a policy in the domain {domain}. 
+            Make sure each policy statement is wrapped with <Statement> at the beginning and a </Statement> followed by new line at the end.
+            Policy statements should be sentence long description of the policy for the domain.
+        """       
+        response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
+        policy_list = re.findall('<statement>(.*)</statement>', response.lower())
+
+        for policy_statement in policy_list:
+            if self.is_unique(policy_statement, policy_set):
+                policy_set.add(policy_statement)
+            else: 
+                print("Policy statement already exists: ", policy_statement)
+
+        print("Policy Statements", policy_set)
+
+        # Policy Axes
+        policy_axes_gen = PolicyAxesGenerator(self.model_config)
+        policy_axes = policy_axes_gen.create_policy_axes(domain)
+        # Policy Stakeholders
+        policy_stakeholders = PolicyStakeholderGenerator(self.model_config)
+        policy_stakeholders = policy_stakeholders.create_policy_stakeholders(domain)
+        while len(policy_axes) < statement_limit:
+            for axis in policy_axes:
+                for stakeholder in policy_stakeholders:
+                    user_message = f"""
+                        Your goal is to come up with policy statements that are creative and innovative.
+                        Each policy statement has to fit under this axis: {axis}
+                        Each policy statement has to be addressed to: {stakeholder}
+                        So far, you have come up with the following policy statements: {", ".join(policy_list)}
+                        Do not repeat any of these policy statements again.
+                        Please come up with additional policy statements.
+                        Make sure each policy axis is wrapped with <Statement> at the beginning and a </Statement> followed by new line at the end.
+                    """
+                    response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
+                    policy_list = re.findall('<statement>(.*)</statement>', response.lower())
+                    for policy_statement in policy_list:
+                        if self.is_unique(policy_statement, policy_set):
+                            policy_set.add(policy_statement)
+                        else: 
+                            print("Policy statement already exists: ", policy_statement)
+                    print("Policy Statements", policy_set)
+        print(list(policy_set))
+        return list(policy_set)
+
     def is_unique(self, policy_statement, statement_list):
         """
         Given a set of policy statements, check if the new policy statement is unique
@@ -182,10 +242,10 @@ class PolicyStatementGenerator(Agent):
             return False
         uniqueness_system_prompt = "You are an assistant that helps decide if a new policy statement is different those already generated."
         user_message = f"""
-        Give these current policy statements: {'\n'.join(statement_list)}
-        and the new policy statement: {policy_statement}
-        output true if the new policy statement different than all of the current policies, or false if it is a duplicate. Also output false if the policy is not a valid policy. Output only one of two words: 'true' or 'false'.
-        """
+            Give these current policy statements: {', '.join(statement_list)}
+            and the new policy statement: {policy_statement}
+            output true if the new policy statement different than all of the current policies, or false if it is a duplicate. Also output false if the policy is not a valid policy. Output only one of two words: 'true' or 'false'.
+            """
         response = LLMWrapper(self.model_config).generate_text(system_prompt=uniqueness_system_prompt, user_message=user_message)        
         if response.lower() == "true":
             return True
@@ -196,4 +256,4 @@ if __name__ == "__main__":
     # Module Testing
     model_config = Config(model_type="OpenAI", model_name="gpt-3.5-turbo")
     agent = PolicyStatementGenerator(model_config)
-    agent.create_policy_statements("Social media and Children safety", statement_limit=50)
+    agent.create_policy_statements("Social media and Children safety", statement_limit=50, generation_method=PolicyStatementMethod.STAKEHOLDER)
