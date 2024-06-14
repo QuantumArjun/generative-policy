@@ -9,7 +9,7 @@ sys.path.append(".")
 import re
 
 from agents.agent import Agent
-from agents.policyaxes import PolicyAxesGenerator
+from agents.policy_axes_generator import PolicyAxesGenerator
 from enum import Enum
 from utils.llm_wrapper import LLMWrapper
 from config import Config
@@ -23,7 +23,7 @@ class PolicymakerWithAxes(Agent):
         Args:
             model_config: The configuration for the model.
         """
-        system_prompt = "You are a policymaker. Your job is to identify the set of policy statements to help craft a creative policyS."
+        system_prompt = "You are a policymaker. Your job is to identify the set of policy statements to help craft a creative policy."
         super().__init__(model_config=model_config, system_prompt=system_prompt)
 
     def create_policy_statements(self, domain, statement_limit=50) -> list: 
