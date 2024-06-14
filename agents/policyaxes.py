@@ -78,7 +78,7 @@ class PolicyAxesGenerator(Agent):
             response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
             axis_list = re.findall('<statement>(.*)</statement>', response.lower())
             for axis_statement in axis_list:
-                if axis_statement not in axis_set or self.is_unique(axis_statement, axis_set):
+                if self.is_unique(axis_statement, axis_set):
                     axis_set.add(axis_statement)
                 else: 
                     print("Axis already exists: ", axis_statement)
@@ -93,7 +93,8 @@ class PolicyAxesGenerator(Agent):
         :param: statement_list: The set of policy statements
         :return: True if the policy statement is unique, False otherwise
         """
-        
+        if policy_statement in statement_list:
+            return False
         uniqueness_system_prompt = "You are an assistant that helps decide if a new policy statement is different those already generated."
         user_message = f"""
         Give these current policy statements, {statement_list} and the new policy statement, {policy_statement}, output true if the new policy statement different than all of the current policies, or false if it is a duplicate. Also output false if the policy is not a valid policy. Output only one of two words: 'true' or 'false'.
