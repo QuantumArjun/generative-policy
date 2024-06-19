@@ -9,7 +9,7 @@ sys.path.append(".")
 import re
 
 from agents.agent import Agent
-from agents.policy_axes_generator import PolicyAxesGenerator
+from agents.policy_statements.policy_axes_generator import PolicyAxesGenerator
 from enum import Enum
 from utils.llm_wrapper import LLMWrapper
 from config import Config

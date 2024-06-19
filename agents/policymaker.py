@@ -5,7 +5,7 @@ Description: This is the general module for the policymaker agent, which will in
 """
 
 from agents.agent import Agent
-from agents.policy_statement_generator import PolicyStatementGenerator, PolicyStatementMethod
+from agents.policy_statements.policy_statement_generator import PolicyStatementGenerator, PolicyStatementMethod
 from enum import Enum
 from utils.llm_wrapper import LLMWrapper
 
