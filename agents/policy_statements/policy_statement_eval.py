@@ -7,16 +7,19 @@ Description: This module contains the classes for the policy statement generator
 import sys
 sys.path.append(".")
 import re
+import numpy as np
+import itertools
 
 from agents.agent import Agent
 from agents.policy_statements.policy_statement_generator import PolicyStatementGenerator, PolicyStatementMethod
 from enum import Enum
-from utils.llm_wrapper import LLMWrapper
+from utils.embed_wrapper import EmbedWrapper
 from config import Config
 import re
 
 class PolicyStatementEvalMethod(Enum):
     RAW_UNIQUENESS = 1
+    EMBED_UNIQUENESS = 2
 
 class PolicyStatementEvaluation(Agent):
     """
@@ -34,6 +37,7 @@ class PolicyStatementEvaluation(Agent):
         """
         system_prompt = "You are a policymaker. Your job is to evaluate a list of policy statements for a given domain."
         super().__init__(model_config=model_config, system_prompt=system_prompt)
+        self.embed_model = EmbedWrapper(model_config)
     
     def evaluate_policy_statements(self, domain, policy_statements_dict, evaluation_method=PolicyStatementEvalMethod.RAW_UNIQUENESS) -> list:
         """
@@ -47,10 +51,12 @@ class PolicyStatementEvaluation(Agent):
         """
         if evaluation_method == PolicyStatementEvalMethod.RAW_UNIQUENESS:
             return self.evaluate_policy_statements_raw_uniqueness(domain, policy_statements_dict)
+        elif evaluation_method == PolicyStatementEvalMethod.EMBED_UNIQUENESS:
+            return self.evaluate_policy_statements_by_embedding_uniqueness(domain, policy_statements_dict)
         else:
             raise ValueError(f"Invalid evaluation method: {evaluation_method}")
     
-    def evaluate_policy_statements_raw_uniqueness(self, domain, policy_statements_dict) -> list: 
+    def evaluate_policy_statements_raw_uniqueness(self, domain, policy_statements_dict) -> dict: 
         """
         Given a domain, create as many unique policy statements as possible. 
         :param domain: The domain to create policy statements for
@@ -58,6 +64,15 @@ class PolicyStatementEvaluation(Agent):
         :return: Dictionary of Metrics of policy statement evaluation
         """
         return {k: len(v) for k, v in policy_statements_dict.items()}
+    
+    def evaluate_policy_statements_by_embedding_uniqueness(self, domain, policy_statements_dict) -> dict:
+        def mean_cos_sim(embeddings):
+            def cos_sim(e1, e2):
+                return np.dot(e1, e2) / (np.linalg.norm(e1) * np.linalg.norm(e2))
+            return np.mean([cos_sim(e1, e2) for e1, e2 in itertools.combinations(embeddings, 2)])
+        policy_embeddings = {k: self.embed_model.embed_documents(v) for k, v in policy_statements_dict.items()}
+        return {k: mean_cos_sim(v) for k, v in policy_embeddings.items()}
+        
  
 if __name__ == "__main__":
     # Module Testing
@@ -79,4 +94,6 @@ if __name__ == "__main__":
     eval = PolicyStatementEvaluation(model_config)
     for model_limit, statement_dict in statements_by_model_limit.items():      
       results = eval.evaluate_policy_statements(domain, statement_dict, evaluation_method=PolicyStatementEvalMethod.RAW_UNIQUENESS)
-      print(model_limit, results)
+      print("Raw uniqueness", model_limit, results)
+      results = eval.evaluate_policy_statements(domain, statement_dict, evaluation_method=PolicyStatementEvalMethod.EMBED_UNIQUENESS)
+      print("Embed uniqueness", model_limit, results)
