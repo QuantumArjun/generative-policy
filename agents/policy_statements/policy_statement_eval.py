@@ -5,6 +5,8 @@ Description: This module contains the classes for the policy statement generator
 """
 
 import sys
+import csv
+import logging
 sys.path.append(".")
 import re
 import numpy as np
@@ -76,24 +78,49 @@ class PolicyStatementEvaluation(Agent):
  
 if __name__ == "__main__":
     # Module Testing
+    logging.basicConfig(level=logging.WARNING)
+    logger = logging.getLogger(PolicyStatementEvaluation.__name__)
+    logger.setLevel(level=logging.INFO)
+
     model_config = Config(model_type="OpenAI", model_name="gpt-3.5-turbo")
     agent = PolicyStatementGenerator(model_config)
     domain = "Social media and Children safety"
-    statements_by_model_limit = {}
-    for model_limit in [1, 5, 20]:
-        policy_statements_base = agent.create_policy_statements(domain, model_call_limt=model_limit, generation_method=PolicyStatementMethod.BASE)
-        policy_statements_chaining = agent.create_policy_statements(domain, model_call_limt=model_limit, generation_method=PolicyStatementMethod.CHAINING)
-        policy_statements_axis = agent.create_policy_statements(domain, model_call_limt=model_limit, generation_method=PolicyStatementMethod.AXIS)
-        policy_statements_stakeholder = agent.create_policy_statements(domain, model_call_limt=model_limit, generation_method=PolicyStatementMethod.STAKEHOLDER)
-        statements_by_model_limit[model_limit] = {
+    statements_by_limit = {}
+    for limit in [50]:
+        logger.info(f"Generating policy statements for domain: {domain} with limit: {limit}")
+        policy_statements_base = agent.create_policy_statements(domain, statement_limit=limit, generation_method=PolicyStatementMethod.BASE)
+        logger.info(f"\tDone generating for base // # of statements: {len(policy_statements_base)}!")
+        policy_statements_chaining = agent.create_policy_statements(domain, statement_limit=limit, generation_method=PolicyStatementMethod.CHAINING)
+        logger.info(f"\tDone generating for chaining // # of statements: {len(policy_statements_chaining)}!")
+        policy_statements_axis = agent.create_policy_statements(domain, statement_limit=limit, generation_method=PolicyStatementMethod.AXIS)
+        logger.info(f"\tDone generating for axis // # of statements: {len(policy_statements_axis)}!")
+        policy_statements_stakeholder = agent.create_policy_statements(domain, statement_limit=limit, generation_method=PolicyStatementMethod.STAKEHOLDER)
+        logger.info(f"\tDone generating for stakeholder // # of statements: {len(policy_statements_stakeholder)}!")
+        statements_by_limit[limit] = {
             "base": policy_statements_base,
             "chaining": policy_statements_chaining,
             "axis": policy_statements_axis,
             "stakeholder": policy_statements_stakeholder
         }
+
+    with open('./agents/policy_statements/data/policy_statements.csv', 'w+', newline='', encoding='utf-8') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["Statement Limit", "Policy Generation Type", "Statement"])
+
+        for model_limit, statements_dict in statements_by_limit.items():
+            for category, statements_list in statements_dict.items():
+                for statement in statements_list:
+                    csv_writer.writerow([model_limit, category, statement])
+
     eval = PolicyStatementEvaluation(model_config)
-    for model_limit, statement_dict in statements_by_model_limit.items():      
-      results = eval.evaluate_policy_statements(domain, statement_dict, evaluation_method=PolicyStatementEvalMethod.RAW_UNIQUENESS)
-      print("Raw uniqueness", model_limit, results)
-      results = eval.evaluate_policy_statements(domain, statement_dict, evaluation_method=PolicyStatementEvalMethod.EMBED_UNIQUENESS)
-      print("Embed uniqueness", model_limit, results)
+    with open('./agents/policy_statements/data/eval_metrics.csv', 'w+', newline='', encoding='utf-8') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["Metric Name", "Statement Limit", "Policy Generation Type", "result"])
+        for model_limit, statement_dict in statements_by_limit.items():      
+            results_raw_uniqueness = eval.evaluate_policy_statements(domain, statement_dict, evaluation_method=PolicyStatementEvalMethod.RAW_UNIQUENESS)
+            results_embed_uniqueness = eval.evaluate_policy_statements(domain, statement_dict, evaluation_method=PolicyStatementEvalMethod.EMBED_UNIQUENESS)
+            for category, result in results_raw_uniqueness.items():
+                csv_writer.writerow(["Number of Unique Statements", model_limit, category, result])
+            for category, result in results_embed_uniqueness.items():
+                csv_writer.writerow(["Cosine Similarity", model_limit, category, result])
+

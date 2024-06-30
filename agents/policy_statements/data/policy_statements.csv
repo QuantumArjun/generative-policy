@@ -1,0 +1,133 @@
+Statement Limit,Policy Generation Type,Statement
+5,base,Do nothing.
+5,base,require social media companies to provide regular educational sessions on online safety and privacy to children and parents.
+5,base,enforce stricter penalties on platforms that fail to remove harmful content targeting children promptly.
+5,base,develop a standardized reporting system for children to easily flag and report inappropriate behavior or content on social media platforms.
+5,base,"introduce a ""safe mode"" feature on all social media platforms that filters out harmful or explicit material for users under a certain age."
+5,base,implement a mandatory age verification process for social media accounts to ensure children are not exposed to inappropriate content.
+5,chaining,create a centralized reporting system for parents and guardians to easily flag concerning behavior or content on social media platforms involving children.
+5,chaining,implement mandatory age verification checks on social media platforms to prevent underage users from accessing potentially harmful content.
+5,chaining,collaborate with tech companies to develop child-friendly versions of social media platforms with enhanced safety features and parental controls.
+5,chaining,Do nothing.
+5,chaining,introduce mandatory digital literacy and online safety education in schools to empower children with the knowledge to navigate social media responsibly.
+5,chaining,enforce strict penalties on social media platforms that fail to promptly remove inappropriate content targeting children.
+5,axis,"implementing a ""safe social media seal"" program where platforms meeting specific safety criteria receive a badge to help parents easily identify child-friendly platforms."
+5,axis,introducing mandatory age verification measures on social media platforms to ensure children under the age limit are not exposed to inappropriate content.
+5,axis,Do nothing.
+5,axis,creating a dedicated government task force to continuously monitor and regulate social media platforms for child safety compliance.
+5,axis,"establishing a ""digital well-being curriculum"" in schools to educate children on safe social media usage, online etiquette, and mental health awareness."
+5,axis,enforcing stricter penalties on social media platforms that fail to promptly remove harmful content targeting children.
+5,stakeholder,implement mandatory age verification measures on social media platforms to ensure children below the age limit are not exposed to inappropriate content.
+5,stakeholder,enforce strict penalties for social media platforms that fail to protect children from cyberbullying and online harassment.
+5,stakeholder,Do nothing.
+5,stakeholder,require social media platforms to provide easy-to-access reporting tools for users to flag inappropriate content targeting children.
+5,stakeholder,"introduce educational programs in schools to teach children about online safety, privacy, and the responsible use of social media."
+5,stakeholder,collaborate with child psychologists and experts to develop guidelines for social media platforms on promoting positive mental health and well-being among young users.
+10,base, collaborate with child psychologists to develop algorithms that detect and prevent cyberbullying on social media platforms. 
+10,base, enforce mandatory age verification processes on social media platforms to prevent children under the age limit from creating accounts. 
+10,base,Do nothing.
+10,base," implement a ""guardian mode"" feature on social media platforms where parents can set restrictions and monitor their children's online activity. "
+10,base, introduce a comprehensive online safety curriculum in schools to educate children on the risks and best practices of using social media. 
+10,base," establish a national task force dedicated to monitoring and addressing child safety issues on social media, with the power to enforce regulations. "
+10,chaining,require social media platforms to provide regular safety and privacy updates specifically tailored for parents and guardians.
+10,chaining, collaborate with tech companies to develop innovative tools such as ai-powered content filtering to automatically detect and remove harmful content targeted at children.
+10,chaining,Do nothing.
+10,chaining,"introduce a ""digital citizenship"" curriculum in schools to educate children on safe and responsible social media usage."
+10,chaining," implement a ""right to be forgotten"" policy for children on social media, allowing them to easily request the removal of any content that may pose a risk to their safety or well-being."
+10,chaining,implement a mandatory age verification process on social media platforms to prevent underage children from accessing inappropriate content.
+10,chaining,establish a national reporting system for harmful content targeting children on social media to enable swift action and intervention.
+10,chaining," establish a task force comprised of child safety experts, educators, and tech industry representatives to continuously assess and address emerging risks to children on social media."
+10,chaining,enforce stricter regulations on targeted advertising towards children on social media platforms to protect them from harmful influences.
+10,chaining, encourage social media platforms to incorporate built-in parental controls and monitoring features to help parents manage their children's online activities.
+10,chaining," create a certification program for social media platforms that meet specific safety standards, providing incentives for platforms to prioritize children's online safety."
+10,axis," implementing a ""report and response protocol"" on social media platforms, requiring them to promptly address and take action on reports of harmful or inappropriate content involving children. "
+10,axis," introducing a ""trusted content creator program"" on social media platforms, highlighting verified accounts that produce safe and educational content for children. "
+10,axis," enforcing a ""transparency policy"" on social media platforms, requiring them to disclose how algorithms impact children's online experiences and content consumption. "
+10,axis,"creating a ""youth advisory board"" within social media companies to provide direct feedback on features affecting children's safety and well-being."
+10,axis,"enforcing a ""parental control dashboard"" requirement on social media platforms, allowing parents to monitor and manage their children's online activities."
+10,axis,Do nothing.
+10,axis,"implementing a ""safe social media certification"" program for platforms, ensuring they meet specific safety criteria for children's use."
+10,axis," implementing a ""digital citizenship education requirement"" for social media platforms, ensuring they provide resources and guidance for children to navigate online interactions responsibly. "
+10,axis," enforcing a ""privacy-by-design"" policy for social media platforms, ensuring that children's data and online activities are protected by default. "
+10,axis,"establishing a ""digital literacy curriculum"" in schools to educate children on safe social media practices and online behavior."
+10,axis,"introducing a ""mandatory age verification"" system on social media platforms to prevent underage users from accessing inappropriate content."
+10,axis," introducing a ""digital well-being feature"" on social media platforms specifically designed for children, promoting healthy tech habits and time management. "
+10,stakeholder,"develop a parental control toolkit that allows parents to monitor and limit their children's social media usage, providing transparency and empowering parents to safeguard their children online."
+10,stakeholder,establish a public awareness campaign to educate parents about the risks of social media for children and provide resources on how to promote a safe online environment at home.
+10,stakeholder,Do nothing.
+10,stakeholder,enforce strict penalties on social media platforms that fail to remove harmful content targeting children promptly.
+10,stakeholder,establish a rating system for social media platforms based on their safety features and child-friendly policies.
+10,stakeholder,develop a partnership between social media platforms and educational institutions to create educational resources and tools for teaching digital citizenship and online safety.
+10,stakeholder,"create a centralized reporting system for parents, teachers, and children to report online abuse and cyberbullying on social media platforms."
+10,stakeholder,establish a mandatory training program for teachers and educators on identifying signs of online dangers and supporting students in navigating social media safely.
+10,stakeholder,"implement a ""digital wellness curriculum"" in schools to educate children on safe and responsible social media usage."
+10,stakeholder,require social media platforms to implement age verification measures to prevent underage users from accessing inappropriate content.
+20,base,"establish a ""report card"" system where social media platforms are evaluated on their efforts to promote children's safety and transparency in content moderation."
+20,base,Do nothing.
+20,base,"implement a ""safety buddy"" system on social media platforms where children can connect with designated safety mentors for guidance and support."
+20,base,introduce digital literacy and online safety classes in school curriculums to educate children on the potential risks and responsibilities of using social media.
+20,base,require social media platforms to regularly audit and update their privacy settings to ensure children's data and information are protected.
+20,base,enforce mandatory age verification processes on social media platforms to prevent underage users from accessing inappropriate content.
+20,chaining,enforcing strict penalties on platforms that fail to promptly remove harmful content targeting children.
+20,chaining, partnering with social media platforms to create interactive and engaging online safety tutorials specifically designed for children. 
+20,chaining," implementing a notification system for parents when their child encounters potentially harmful content on social media, prompting discussions and interventions. "
+20,chaining,establishing a mandatory age verification process for all social media users to prevent underage access.
+20,chaining,"implementing a ""safe social media seal"" program to certify platforms meeting stringent child safety standards."
+20,chaining," implementing a feature that limits screen time on social media for children, promoting healthier online habits. "
+20,chaining, creating a centralized reporting system for children to easily report any harmful or inappropriate content on social media platforms. 
+20,chaining," introducing a regular ""digital detox day"" where social media platforms are encouraged to promote offline activities for children to reduce screen time and promote well-being."
+20,chaining,Do nothing.
+20,chaining,collaborating with schools to integrate digital literacy and online safety education into the curriculum.
+20,chaining," launching a public awareness campaign to educate children, parents, and educators about the potential dangers of social media and how to navigate them safely. "
+20,chaining, requiring social media platforms to provide resources for mental health support and counseling for children who have experienced cyberbullying or online harassment. 
+20,chaining," developing a rating system that categorizes social media platforms based on their child safety measures, providing transparency for parents and users. "
+20,chaining, establishing a national helpline specifically for children and parents to seek guidance and support on social media safety issues. 
+20,chaining," establishing a dedicated task force comprised of experts in child psychology, technology, and law enforcement to continuously monitor and address emerging risks on social media platforms. "
+20,chaining," introducing regular audits and assessments of social media platforms' policies and practices related to child safety, with consequences for non-compliance. "
+20,chaining," implementing a mandatory parental consent process for children under a certain age to create social media accounts, ensuring parents are aware of their child's online activities. "
+20,chaining, implementing a reward system for social media platforms that consistently demonstrate proactive measures to protect children from harmful content. 
+20,chaining,"introducing a ""guardian mode"" feature allowing parents to monitor and control their child's social media usage."
+20,chaining, partnering with child psychologists to develop age-appropriate content filters for social media platforms to protect children from exposure to inappropriate material. 
+20,chaining, establishing a task force to research and recommend age-appropriate content guidelines for social media platforms to protect children from harmful exposure. 
+20,chaining, introducing regular mental health check-ins for children using social media platforms to identify and address any negative impacts on their well-being. 
+20,axis,establish a dedicated government task force to monitor and address child safety issues on social media platforms.
+20,axis, create a public database that tracks and reports on instances of child safety violations by social media platforms for increased transparency and accountability. 
+20,axis," create a reward system for social media platforms that actively promote positive interactions, kindness, and empathy among users, especially targeting children. "
+20,axis, establish a youth advisory board comprised of children and teenagers to provide direct input on social media policies and features affecting their safety and well-being. 
+20,axis," implement tax incentives for social media platforms that invest in research and development to enhance child safety measures, encouraging ongoing innovation in this critical area."
+20,axis,Do nothing.
+20,axis," implement a ""digital citizenship"" curriculum in schools to educate children on safe and responsible social media usage from a young age. "
+20,axis, enforce strict limitations on targeted advertising to children on social media platforms to safeguard their privacy and prevent data exploitation. 
+20,axis,require social media platforms to provide regular online safety education and resources specifically tailored for children and parents.
+20,axis," develop a standardized reporting mechanism for children and parents to easily flag inappropriate content or behavior on social media platforms, promoting transparency in addressing safety concerns. "
+20,axis,"enforce strict penalties on social media companies that fail to comply with child safety regulations, including fines and temporary shutdowns."
+20,axis, implement regular independent audits of social media platforms to assess their adherence to child safety policies and transparency standards. 
+20,axis, establish a system for children to easily request and receive support from trained counselors or moderators when encountering harmful content or cyberbullying on social media platforms. 
+20,axis, establish a rating system for social media platforms indicating their level of transparency and effectiveness in protecting children online. 
+20,axis, require social media platforms to disclose detailed information on their data collection practices involving children to ensure transparency and informed consent. 
+20,axis," establish a grant program to support the development of innovative child safety features and tools on social media platforms, incentivizing companies to prioritize children's well-being within their technology."
+20,axis,collaborate with child psychologists and experts to develop guidelines for promoting positive online interactions and mental well-being among children on social media.
+20,axis," introduce a ""safe social media"" certification program for platforms that meet stringent child safety standards, providing incentives for compliance while maintaining freedom of choice for users. "
+20,axis," implement ai-powered content moderation tools on social media platforms to proactively identify and remove harmful or inappropriate content targeting children, balancing freedom of expression with protection. "
+20,axis,implement a mandatory age verification system on social media platforms to prevent underage children from accessing inappropriate content.
+20,stakeholder,implement a parental control dashboard on social media platforms that allows parents to monitor and manage their children's online activity and interactions.
+20,stakeholder," implement a ""digital citizenship"" certification program for children, teaching them about their rights, responsibilities, and safety when using social media platforms. "
+20,stakeholder,"require social media platforms to provide transparent reports on the type and frequency of content children are exposed to, empowering parents to make informed decisions about their children's usage."
+20,stakeholder,Do nothing.
+20,stakeholder, advocate for the inclusion of digital literacy and online safety education in the national curriculum to ensure children are equipped with the necessary skills to navigate social media responsibly.
+20,stakeholder," introduce a mandatory annual online safety training for all social media platform employees, emphasizing the importance of child protection and mental health in their roles. "
+20,stakeholder,"require social media platforms to publish annual reports detailing their efforts to combat cyberbullying and protect children online, funded by a tax allocated for digital safety initiatives."
+20,stakeholder," partner with social media platforms to develop child-friendly interfaces with built-in safety features, encouraging a collaborative effort to prioritize children's online well-being. "
+20,stakeholder,"establishing a ""safe mode"" feature on social media platforms that filters out harmful content for users under a certain age."
+20,stakeholder," introduce a certification program for social media platforms that meet specific child safety standards, fostering transparency and accountability within the tech industry. "
+20,stakeholder, establish a public awareness campaign to educate parents and children about the risks of online interactions and the importance of practicing caution and respect on social media platforms. 
+20,stakeholder," establish a government-led research initiative to study the impact of social media on children's mental health and well-being, with the findings informing future policy decisions."
+20,stakeholder," implement a real-time reporting feature on social media platforms for children to easily flag and report inappropriate content, fostering a safer online environment. "
+20,stakeholder," create a public rating system for social media platforms based on their child safety features and impact on children's mental well-being, encouraging competition for better practices. "
+20,stakeholder," create a dedicated ombudsman office within social media platforms to address complaints and concerns related to children's safety and privacy, providing a direct line of communication for parents and guardians. "
+20,stakeholder,implementing mandatory age verification checks on social media platforms to prevent children under the age limit from creating accounts.
+20,stakeholder,introducing educational programs in schools to teach children about online safety and responsible social media usage.
+20,stakeholder,"collaborate with child psychologists and experts to develop guidelines for social media platforms on promoting positive and safe interactions for children, ensuring transparency in the implementation of these guidelines."
+20,stakeholder,"establish a tax-funded program providing free online safety workshops for parents, educating them on monitoring children's social media activity and recognizing potential risks."
+20,stakeholder, require social media platforms to regularly conduct audits by independent third parties to ensure compliance with child safety and privacy regulations. 
+20,stakeholder,enforcing stricter penalties on social media platforms that fail to remove harmful and inappropriate content targeted at children.
