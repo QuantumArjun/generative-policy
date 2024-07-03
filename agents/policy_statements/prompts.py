@@ -19,7 +19,13 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The system prompt for policy statements
         """
-        return f"You are an assistant helping come up with creative policy solutions to the domain of {domain}."
+        return f"""
+        You are an assistant helping come up with creative policy goals to the domain of {domain}.
+        A policy goal is a specific objective or desired outcome an organization aims to achieve
+        through the implementation of policies, laws, regulations, or programs.
+        These policy goals are high-level statements that outline the desired outcome or direction.
+        Here is an example of a policy goal: "Increase access to affordable housing for low-income families within urban areas"
+        """
 
     def _get_domain_prompt(self, domain):
         """
@@ -52,6 +58,19 @@ class PromptsForPolicyStatementGenerator:
         return """A policy goal is essentially the big-picture objective that a policy aims to achieve.
                 It's a broad statement that outlines the desired outcome or direction.
                 Policy goals should be a sentence long description.
+                Here are a couple of examples of policy goals:
+                - Improve literacy rates among children
+                - Reduce the prevalence of diabetes among adults
+                - Reduce greenhouse gas emissions in the transportation sector
+                - Increase the employment rate for recent college graduates
+                - Expand public transportation infrastructure in rural areas
+                Here are examples of policy statements that are too specific to be called policy goals:
+                - Establish a grant program to support the creation of engaging and interactive online safety 
+                 resources specifically tailored for children, ensuring that they are informative 
+                 and age-appropriate, with funding sourced from the national budget.
+                -  Allocate a portion of the national budget to establish a research institute
+                  dedicated to studying the impact of social media on children's mental health 
+                  and well-being, with the aim of informing evidence-based policy decisions.  
             """
 
     def _get_generated_policy_statements_prompt(self, policy_set):
@@ -168,7 +187,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The uniqueness system prompt for policy statements
         """
-        return "You are an assistant that helps decide if a new policy statement is different those already generated."
+        return "You are an assistant that helps decide if a new policy goal is different those already generated."
     
     def get_uniqueness_user_message_prompt(self, statement_list, policy_statement):
         """
@@ -178,8 +197,8 @@ class PromptsForPolicyStatementGenerator:
             str: The uniqueness user message prompt for policy statements
         """
         return f"""
-            Give these current policy statements: {', '.join(statement_list)}
-            and the new policy statement: {policy_statement}
-            output true if the new policy statement different than all of the current policies, or false if it is a duplicate.
-            Also output false if the policy is not a valid policy. Output only one of two words: 'true' or 'false'.
+            Give these current policy goal: {', '.join(statement_list)}
+            and the new policy goal: {policy_statement}
+            output true if the new policy goal different than all of the current policy goals, or false if it is a duplicate.
+            Also output false if the policy goal is not a valid policy goal. Output only one of two words: 'true' or 'false'.
             """

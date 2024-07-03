@@ -7,7 +7,7 @@ Description: This is the general module for the policy axes agent, which generat
 import sys
 sys.path.append(".")
 import re
-
+import logging
 from agents.agent import Agent
 from utils.llm_wrapper import LLMWrapper
 from config import Config
@@ -24,6 +24,8 @@ class PolicyAxesGenerator(Agent):
         """
         system_prompt = "You are a policymaker. Your job is to identify the set of axes by which a policy should be evaluated."
         super().__init__(model_config=model_config, system_prompt=system_prompt)
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(level=logging.INFO)
         if predefined_policy_axes:
             self.predefined_policy_axes = predefined_policy_axes
         else:
@@ -57,12 +59,11 @@ class PolicyAxesGenerator(Agent):
         axis_list = re.findall('<statement>(.*)</statement>', response.lower())
 
         for axis_statement in axis_list:
+            axis_statement = axis_statement.strip()
             if self.is_unique(axis_statement, axis_set):
                 axis_set.add(axis_statement)
-            else: 
-                print("Axis already exists: ", axis_statement)
 
-        print("Axis List", axis_set)            
+        self.logger.info(f"\t\t Set of Axes: \n \t\t\t{axis_set}")         
         
         # Chaining to get more responses 
         while len(axis_set) < statement_limit:
@@ -78,11 +79,10 @@ class PolicyAxesGenerator(Agent):
             response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
             axis_list = re.findall('<statement>(.*)</statement>', response.lower())
             for axis_statement in axis_list:
+                axis_statement = axis_statement.strip()
                 if self.is_unique(axis_statement, axis_set):
                     axis_set.add(axis_statement)
-                else: 
-                    print("Axis already exists: ", axis_statement)
-            print("Axis List", axis_set)            
+            self.logger.info(f"\t\t Set of Axes: \n \t\t\t{axis_set}")         
         return list(axis_set)
         
     

@@ -17,8 +17,8 @@ from utils.llm_wrapper import LLMWrapper
 
 from config import Config
 
-AXIS_LIMIT = 5
-STAKEHOLDER_LIMIT = 5
+AXIS_LIMIT = 20
+STAKEHOLDER_LIMIT = 20
 
 
 class PolicyStatementMethod(Enum):

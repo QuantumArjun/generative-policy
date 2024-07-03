@@ -7,7 +7,7 @@ Description: This is the general module for the policy stakeholder agent, which 
 import sys
 sys.path.append(".")
 import re
-
+import logging
 from agents.agent import Agent
 from utils.llm_wrapper import LLMWrapper
 from config import Config
@@ -24,6 +24,8 @@ class PolicyStakeholderGenerator(Agent):
         """
         system_prompt = "You are a policymaker. Your job is to identify the set of axes by which a policy should be evaluated."
         super().__init__(model_config=model_config, system_prompt=system_prompt)
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(level=logging.INFO)
         if predefined_policy_stakeholder:
             self.predefined_policy_stakeholder = predefined_policy_stakeholder
         else:
@@ -52,12 +54,10 @@ class PolicyStakeholderGenerator(Agent):
         stakeholder_list = re.findall('<statement>(.*)</statement>', response.lower())
 
         for stakeholder_statement in stakeholder_list:
+            stakeholder_statement = stakeholder_statement.strip()
             if self.is_unique(stakeholder_statement, stakeholder_set):
                 stakeholder_set.add(stakeholder_statement)
-            else: 
-                print("Stakeholder already exists: ", stakeholder_statement)
-
-        print("Stakeholder List", stakeholder_set)            
+        self.logger.info(f"\t\t Set of Stakeholders: \n \t\t\t{stakeholder_set}")
         
         # Chaining to get more responses 
         while len(stakeholder_set) < statement_limit:
@@ -73,11 +73,10 @@ class PolicyStakeholderGenerator(Agent):
             response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
             stakeholder_list = re.findall('<statement>(.*)</statement>', response.lower())
             for stakeholder_statement in stakeholder_list:
+                stakeholder_statement = stakeholder_statement.strip()
                 if self.is_unique(stakeholder_statement, stakeholder_set):
                     stakeholder_set.add(stakeholder_statement)
-                else: 
-                    print("stakeholder already exists: ", stakeholder_statement)
-            print("stakeholder List", stakeholder_set)            
+            self.logger.info(f"\t\t Set of Stakeholders: \n \t\t\t{stakeholder_set}")         
         return list(stakeholder_set)
         
     

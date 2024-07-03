@@ -86,7 +86,7 @@ if __name__ == "__main__":
     agent = PolicyStatementGenerator(model_config)
     domain = "Social media and Children safety"
     statements_by_limit = {}
-    for limit in [5, 10, 20]:
+    for limit in [20, 50, 100]:
         logger.info(f"Generating policy statements for domain: {domain} with limit: {limit}")
         policy_statements_base = agent.create_policy_statements(domain, statement_limit=limit, generation_method=PolicyStatementMethod.BASE)
         logger.info(f"\tDone generating for base // # of statements: {len(policy_statements_base)}!")
