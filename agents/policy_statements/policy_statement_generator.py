@@ -3,22 +3,25 @@ Module: policy_statement_generator.py
 Author: akaranam and mhelabd
 Description: This module contains the classes for the policy statement generator agent.
 """
-
 import sys
 sys.path.append(".")
-import re
 
+import re
 from agents.agent import Agent
 from agents.policy_statements.prompts import PromptsForPolicyStatementGenerator
 from agents.policy_statements.policy_axes_generator import PolicyAxesGenerator
 from agents.policy_statements.policy_stakeholder_generator import PolicyStakeholderGenerator
+from agents.policy_statements.policy_problem_generator import PolicyProblemGenerator
 from enum import Enum
 from utils.llm_wrapper import LLMWrapper
-
 from config import Config
 
-AXIS_LIMIT = 20
-STAKEHOLDER_LIMIT = 20
+
+
+AXIS_LIMIT = 10
+STAKEHOLDER_LIMIT = 10
+PROBLEM_LIMIT = 10
+ONE_ROUND_OF_GEN = True
 
 
 class PolicyStatementMethod(Enum):
@@ -27,6 +30,7 @@ class PolicyStatementMethod(Enum):
     CHAINING = 2
     AXIS = 3
     STAKEHOLDER = 4
+    PROBLEM = 5
 
 
 class PolicyStatementGenerator(Agent):
@@ -64,6 +68,9 @@ class PolicyStatementGenerator(Agent):
             return self.create_policy_statements_along_axis(domain, statement_limit, model_call_limt)
         elif generation_method == PolicyStatementMethod.STAKEHOLDER:
             return self.create_policy_statements_along_axis_and_stakeholder(domain, statement_limit, model_call_limt)
+        elif generation_method == PolicyStatementMethod.PROBLEM:
+            return self.create_policy_statements_along_axis_and_stakeholder_and_problem(
+                domain, statement_limit, model_call_limt)
         else:
             raise ValueError(f"Invalid generation method: {generation_method}")
 
@@ -126,7 +133,8 @@ class PolicyStatementGenerator(Agent):
             for policy_statement in policy_list:
                 if self.is_unique(policy_statement, policy_set):
                     policy_set.add(policy_statement)
-
+            if ONE_ROUND_OF_GEN:
+                return list(policy_set)
         return list(policy_set)
 
     def create_policy_statements_along_axis(self, domain, statement_limit=-1, model_call_limt=-1) -> list:
@@ -166,7 +174,8 @@ class PolicyStatementGenerator(Agent):
                 # If limit is reached when not done with axis, we should still break.
                 if self.is_limit_reached(len(policy_set), num_model_calls, statement_limit, model_call_limt):
                     return list(policy_set)
-
+            if ONE_ROUND_OF_GEN:
+                return list(policy_set)
         return list(policy_set)
 
     def create_policy_statements_along_axis_and_stakeholder(
@@ -211,7 +220,58 @@ class PolicyStatementGenerator(Agent):
                     # If limit is reached when not done with axis, we should still break.
                     if self.is_limit_reached(len(policy_set), num_model_calls, statement_limit, model_call_limt):
                         return list(policy_set)
+            if ONE_ROUND_OF_GEN:
+                return list(policy_set)
+        return list(policy_set)
 
+    def create_policy_statements_along_axis_and_stakeholder_and_problem(
+            self, domain, statement_limit=-1, model_call_limt=-1) -> list:
+        """
+        Given a domain, create as many unique policy statements as possible, exploring along pre-defined axes and stakeholders.
+        :param domain: The domain to create policy statements for
+        return: List of policy statements
+        """
+
+        policy_set = set(["Do nothing."])
+        num_model_calls = 0
+
+        assistant_system_prompt = self.prompts.get_system_prompt(domain)
+        user_message = self.prompts.get_user_messsage_base(domain)
+        response = LLMWrapper(self.model_config).generate_text(
+            system_prompt=assistant_system_prompt, user_message=user_message)
+        policy_list = re.findall('<statement>(.*)</statement>', response.lower())
+        num_model_calls += 1
+
+        for policy_statement in policy_list:
+            if self.is_unique(policy_statement, policy_set):
+                policy_set.add(policy_statement)
+
+        # Policy Axes
+        policy_axes_gen = PolicyAxesGenerator(self.model_config)
+        policy_axes = policy_axes_gen.create_policy_axes(domain, statement_limit=AXIS_LIMIT)
+        policy_stakeholders_gen = PolicyStakeholderGenerator(self.model_config)
+        policy_stakeholders = policy_stakeholders_gen.create_policy_stakeholders(
+            domain, statement_limit=STAKEHOLDER_LIMIT)
+        policy_problem_gen = PolicyProblemGenerator(self.model_config)
+        policy_problem = policy_problem_gen.create_policy_problems(domain, statement_limit=PROBLEM_LIMIT)
+        while not self.is_limit_reached(len(policy_axes), num_model_calls, statement_limit, model_call_limt):
+            for axis in policy_axes:
+                for stakeholder in policy_stakeholders:
+                    for problem in policy_problem:
+                        user_message = self.prompts.get_user_message_along_axis_and_stakeholder_and_problems(
+                            domain, policy_set, axis, stakeholder, problem)
+                        response = LLMWrapper(self.model_config).generate_text(
+                            system_prompt=assistant_system_prompt, user_message=user_message)
+                        policy_list = re.findall('<statement>(.*)</statement>', response.lower())
+                        num_model_calls += 1
+                        for policy_statement in policy_list:
+                            if self.is_unique(policy_statement, policy_set):
+                                policy_set.add(policy_statement)
+                        # If limit is reached when not done with axis, we should still break.
+                        if self.is_limit_reached(len(policy_set), num_model_calls, statement_limit, model_call_limt):
+                            return list(policy_set)
+            if ONE_ROUND_OF_GEN:
+                return list(policy_set)
         return list(policy_set)
 
     def is_unique(self, policy_statement, statement_list):
@@ -223,14 +283,18 @@ class PolicyStatementGenerator(Agent):
         """
         if policy_statement in statement_list:
             return False
+        n = len(statement_list)
+        statement_list = list(statement_list)
+        chunk_size = 20
         uniqueness_system_prompt = self.prompts.get_uniqueness_system_prompt()
-        user_message = self.prompts.get_uniqueness_user_message_prompt(statement_list, policy_statement)
-        response = LLMWrapper(self.model_config).generate_text(
-            system_prompt=uniqueness_system_prompt, user_message=user_message)
-        if response.lower() == "true":
-            return True
-        else:
-            return False
+        for i in range(0, n, chunk_size):
+            statement_list_chunk = statement_list[i:i + chunk_size]
+            user_message = self.prompts.get_uniqueness_user_message_prompt(statement_list_chunk, policy_statement)
+            response = LLMWrapper(self.model_config).generate_text(
+                system_prompt=uniqueness_system_prompt, user_message=user_message)
+            if response.lower() == "false":
+                return False
+        return True
 
     def is_limit_reached(self, num_policies, num_model_calls, statement_limit, model_call_limit):
         """
@@ -246,7 +310,9 @@ class PolicyStatementGenerator(Agent):
             True if the limit is reached, False otherwise.
         """
         if statement_limit == -1 and model_call_limit == -1:
-            raise ValueError("Only one of statement_limit or model_call_limit can be -1")
+            if not ONE_ROUND_OF_GEN:
+                raise ValueError("Only one of statement_limit or model_call_limit can be -1")
+            return False
         if statement_limit == -1:
             # Number of model calls does not exceed the model call limit
             return num_model_calls >= model_call_limit
@@ -263,5 +329,5 @@ if __name__ == "__main__":
     model_config = Config(model_type="OpenAI", model_name="gpt-3.5-turbo")
     agent = PolicyStatementGenerator(model_config)
     statements = agent.create_policy_statements("Social media and Children safety", statement_limit=10,
-                                   generation_method=PolicyStatementMethod.CHAINING)
+                                                generation_method=PolicyStatementMethod.PROBLEM)
     print(statements)

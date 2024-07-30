@@ -6,23 +6,23 @@ Description: This is the general module for the policy stakeholder agent, which 
 
 import sys
 sys.path.append(".")
-import re
-import logging
-from agents.agent import Agent
-from utils.llm_wrapper import LLMWrapper
-from config import Config
 
+from config import Config
+from utils.llm_wrapper import LLMWrapper
+from agents.agent import Agent
+import logging
+import re
 
 
 class PolicyStakeholderGenerator(Agent):
     def __init__(self, model_config, predefined_policy_stakeholder=[]):
         """
         Initializes the Policymaker agent with the given model configuration.
-        
+
         Args:
             model_config: The configuration for the model.
         """
-        system_prompt = "You are a policymaker. Your job is to identify the set of axes by which a policy should be evaluated."
+        system_prompt = "You are a policymaker. Your job is to identify the set of stakeholders by which a policy should be evaluated."
         super().__init__(model_config=model_config, system_prompt=system_prompt)
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(level=logging.INFO)
@@ -35,7 +35,7 @@ class PolicyStakeholderGenerator(Agent):
                 'Tax Payers',
             ]
 
-    def create_policy_stakeholders(self, domain: str,  statement_limit:int=20) -> list: 
+    def create_policy_stakeholders(self, domain: str,  statement_limit: int = 20) -> list:
         """
         Given a domain, create as many unique policy statements as possible. 
         :param domain: The domain to create policy statements for
@@ -50,7 +50,8 @@ class PolicyStakeholderGenerator(Agent):
             Please limit response to the stakeholder name without including any description or explanation of why you chose that stakeholder.
         """
 
-        response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
+        response = LLMWrapper(self.model_config).generate_text(
+            system_prompt=assistant_system_prompt, user_message=user_message)
         stakeholder_list = re.findall('<statement>(.*)</statement>', response.lower())
 
         for stakeholder_statement in stakeholder_list:
@@ -58,28 +59,28 @@ class PolicyStakeholderGenerator(Agent):
             if self.is_unique(stakeholder_statement, stakeholder_set):
                 stakeholder_set.add(stakeholder_statement)
         self.logger.info(f"\t\t Set of Stakeholders: \n \t\t\t{stakeholder_set}")
-        
-        # Chaining to get more responses 
+
+        # Chaining to get more responses
         while len(stakeholder_set) < statement_limit:
             user_message = f"""
-                Your goal is to come up with policy evaluation criteria (or axes) that are creative and innovative.
-                So far, you have come up with the following policy axes: {", ".join(stakeholder_list)}
-                Do not repeat any of these axes again.
-                Please come up with additional policy evaluation criteria or axes.
+                Your goal is to come up with policy stakeholders that are creative and innovative.
+                So far, you have come up with the following policy stakeholders: {", ".join(stakeholder_list)}
+                Do not repeat any of these stakeholders again.
+                Please come up with additional policy stakeholders.
                 Make sure each policy stakeholder is wrapped with <Statement> at the beginning and a </Statement> followed by new line at the end.
                 Please limit response to the stakeholder name without including any description or explanation of what the stakeholder means.
         """
-            
-            response = LLMWrapper(self.model_config).generate_text(system_prompt=assistant_system_prompt, user_message=user_message)
+
+            response = LLMWrapper(self.model_config).generate_text(
+                system_prompt=assistant_system_prompt, user_message=user_message)
             stakeholder_list = re.findall('<statement>(.*)</statement>', response.lower())
             for stakeholder_statement in stakeholder_list:
                 stakeholder_statement = stakeholder_statement.strip()
                 if self.is_unique(stakeholder_statement, stakeholder_set):
                     stakeholder_set.add(stakeholder_statement)
-            self.logger.info(f"\t\t Set of Stakeholders: \n \t\t\t{stakeholder_set}")         
+            self.logger.info(f"\t\t Set of Stakeholders: \n \t\t\t{stakeholder_set}")
         return list(stakeholder_set)
-        
-    
+
     def is_unique(self, policy_statement, statement_list):
         """
         Given a set of policy statements, check if the new policy statement is unique
@@ -91,13 +92,18 @@ class PolicyStakeholderGenerator(Agent):
             return False
         uniqueness_system_prompt = "You are an assistant that helps decide if a new policy statement is different those already generated."
         user_message = f"""
-        Give these current policy statements, {statement_list} and the new policy statement, {policy_statement}, output true if the new policy statement different than all of the current policies, or false if it is a duplicate. Also output false if the policy is not a valid policy. Output only one of two words: 'true' or 'false'.
+        Give these current policy stakeholders, {statement_list} and the new policy stakeholder, {policy_statement}, 
+        output true if the new policy stakeholders are different than all of the current stakeholders, 
+        or false if it is a duplicate. Also output false if the stakeholder is not a valid one. 
+        Output only one of two words: 'true' or 'false'.
         """
-        response = LLMWrapper(self.model_config).generate_text(system_prompt=uniqueness_system_prompt, user_message=user_message)        
+        response = LLMWrapper(self.model_config).generate_text(
+            system_prompt=uniqueness_system_prompt, user_message=user_message)
         if response.lower() == "true":
             return True
         else:
             return False
+
 
 if __name__ == "__main__":
     # Module Testing

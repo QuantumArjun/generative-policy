@@ -96,11 +96,14 @@ if __name__ == "__main__":
         logger.info(f"\tDone generating for axis // # of statements: {len(policy_statements_axis)}!")
         policy_statements_stakeholder = agent.create_policy_statements(domain, statement_limit=limit, generation_method=PolicyStatementMethod.STAKEHOLDER)
         logger.info(f"\tDone generating for stakeholder // # of statements: {len(policy_statements_stakeholder)}!")
+        policy_statements_problem = agent.create_policy_statements(domain, statement_limit=limit, generation_method=PolicyStatementMethod.PROBLEM)
+        logger.info(f"\tDone generating for problem // # of statements: {len(policy_statements_problem)}!")
         statements_by_limit[limit] = {
             "base": policy_statements_base,
             "chaining": policy_statements_chaining,
             "axis": policy_statements_axis,
-            "stakeholder": policy_statements_stakeholder
+            "stakeholder": policy_statements_stakeholder,
+            "problem": policy_statements_problem
         }
 
     with open('./agents/policy_statements/data/policy_statements.csv', 'w+', newline='', encoding='utf-8') as csvfile:

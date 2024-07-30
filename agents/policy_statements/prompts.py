@@ -112,6 +112,18 @@ class PromptsForPolicyStatementGenerator:
         """
         return f"Each policy goal has to be helping this stakeholder: {stakeholder}."
 
+    def _get_policy_problem_prompt(self, problem):
+        """
+        Generates the policy problem prompt for policy statements
+
+        Args:
+            problem (str): The problem for which policy statements are being generated
+
+        Returns:
+            str: The policy problem prompt for policy statements
+        """
+        return f"Each policy goal has to solve the following problem: {problem}."
+
     def get_user_messsage_base(self, domain):
         """
         Generates the user message for base policy statement generation
@@ -180,6 +192,27 @@ class PromptsForPolicyStatementGenerator:
                     {self._get_policy_statement_explanation_prompt()}
                 """
 
+    def get_user_message_along_axis_and_stakeholder_and_problems(self, domain, policy_set, axis, stakeholder, problem):
+        """
+        Generates the user message for policy statement generation using along stakeholder
+
+        Args:
+            policy_set (set): The set of policy statements generated so far
+
+        Returns:
+            str: The user message for policy statement generation using along stakeholder
+        """
+        return f"""
+                    {self._get_domain_prompt(domain)}
+                    {self._get_generated_policy_statements_prompt(policy_set)}
+                    {self._get_policy_axis_prompt(axis)}
+                    {self._get_policy_stakeholder_prompt(stakeholder)}
+                    {self._get_policy_problem_prompt(problem)}
+                    {self._get_generated_policy_statements_prompt(policy_set)}
+                    {self._get_formatting_prompt()}
+                    {self._get_policy_statement_explanation_prompt()}
+                """
+
     def get_uniqueness_system_prompt(self):
         """
         Generates the uniqueness system prompt for policy statements
@@ -188,7 +221,7 @@ class PromptsForPolicyStatementGenerator:
             str: The uniqueness system prompt for policy statements
         """
         return "You are an assistant that helps decide if a new policy goal is different those already generated."
-    
+
     def get_uniqueness_user_message_prompt(self, statement_list, policy_statement):
         """
         Generates the uniqueness user message prompt for policy statements
