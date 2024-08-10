@@ -206,20 +206,19 @@ class PolicyStatementGenerator(Agent):
         policy_stakeholders = PolicyStakeholderGenerator(self.model_config)
         policy_stakeholders = policy_stakeholders.create_policy_stakeholders(domain, statement_limit=STAKEHOLDER_LIMIT)
         while not self.is_limit_reached(len(policy_axes), num_model_calls, statement_limit, model_call_limt):
-            for axis in policy_axes:
-                for stakeholder in policy_stakeholders:
-                    user_message = self.prompts.get_user_message_along_axis_and_stakeholder(
-                        domain, policy_set, axis, stakeholder)
-                    response = LLMWrapper(self.model_config).generate_text(
-                        system_prompt=assistant_system_prompt, user_message=user_message)
-                    policy_list = re.findall('<statement>(.*)</statement>', response.lower())
-                    num_model_calls += 1
-                    for policy_statement in policy_list:
-                        if self.is_unique(policy_statement, policy_set):
-                            policy_set.add(policy_statement)
-                    # If limit is reached when not done with axis, we should still break.
-                    if self.is_limit_reached(len(policy_set), num_model_calls, statement_limit, model_call_limt):
-                        return list(policy_set)
+            for stakeholder in policy_stakeholders:
+                user_message = self.prompts.get_user_message_along_axis_and_stakeholder(
+                    domain, policy_set, policy_axes, stakeholder)
+                response = LLMWrapper(self.model_config).generate_text(
+                    system_prompt=assistant_system_prompt, user_message=user_message)
+                policy_list = re.findall('<statement>(.*)</statement>', response.lower())
+                num_model_calls += 1
+                for policy_statement in policy_list:
+                    if self.is_unique(policy_statement, policy_set):
+                        policy_set.add(policy_statement)
+                # If limit is reached when not done with axis, we should still break.
+                if self.is_limit_reached(len(policy_set), num_model_calls, statement_limit, model_call_limt):
+                    return list(policy_set)
             if ONE_ROUND_OF_GEN:
                 return list(policy_set)
         return list(policy_set)
@@ -255,21 +254,19 @@ class PolicyStatementGenerator(Agent):
         policy_problem_gen = PolicyProblemGenerator(self.model_config)
         policy_problem = policy_problem_gen.create_policy_problems(domain, statement_limit=PROBLEM_LIMIT)
         while not self.is_limit_reached(len(policy_axes), num_model_calls, statement_limit, model_call_limt):
-            for axis in policy_axes:
-                for stakeholder in policy_stakeholders:
-                    for problem in policy_problem:
-                        user_message = self.prompts.get_user_message_along_axis_and_stakeholder_and_problems(
-                            domain, policy_set, axis, stakeholder, problem)
-                        response = LLMWrapper(self.model_config).generate_text(
-                            system_prompt=assistant_system_prompt, user_message=user_message)
-                        policy_list = re.findall('<statement>(.*)</statement>', response.lower())
-                        num_model_calls += 1
-                        for policy_statement in policy_list:
-                            if self.is_unique(policy_statement, policy_set):
-                                policy_set.add(policy_statement)
-                        # If limit is reached when not done with axis, we should still break.
-                        if self.is_limit_reached(len(policy_set), num_model_calls, statement_limit, model_call_limt):
-                            return list(policy_set)
+            for problem in policy_problem:
+                user_message = self.prompts.get_user_message_along_axis_and_stakeholder_and_problems(
+                    domain, policy_set, policy_axes, policy_stakeholders, problem)
+                response = LLMWrapper(self.model_config).generate_text(
+                    system_prompt=assistant_system_prompt, user_message=user_message)
+                policy_list = re.findall('<statement>(.*)</statement>', response.lower())
+                num_model_calls += 1
+                for policy_statement in policy_list:
+                    if self.is_unique(policy_statement, policy_set):
+                        policy_set.add(policy_statement)
+                # If limit is reached when not done with axis, we should still break.
+                if self.is_limit_reached(len(policy_set), num_model_calls, statement_limit, model_call_limt):
+                    return list(policy_set)
             if ONE_ROUND_OF_GEN:
                 return list(policy_set)
         return list(policy_set)

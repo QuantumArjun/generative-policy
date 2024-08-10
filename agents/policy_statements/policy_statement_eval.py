@@ -84,9 +84,9 @@ if __name__ == "__main__":
 
     model_config = Config(model_type="OpenAI", model_name="gpt-3.5-turbo")
     agent = PolicyStatementGenerator(model_config)
-    domain = "Social media and Children safety"
+    domain = "Lack of Access to Affordable Healthcare"
     statements_by_limit = {}
-    for limit in [20, 50, 100]:
+    for limit in [20, 50]:
         logger.info(f"Generating policy statements for domain: {domain} with limit: {limit}")
         policy_statements_base = agent.create_policy_statements(domain, statement_limit=limit, generation_method=PolicyStatementMethod.BASE)
         logger.info(f"\tDone generating for base // # of statements: {len(policy_statements_base)}!")
