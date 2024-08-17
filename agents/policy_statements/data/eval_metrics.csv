@@ -1,21 +1,21 @@
 Metric Name,Statement Limit,Policy Generation Type,result
-Number of Unique Statements,20,base,6
-Number of Unique Statements,20,chaining,9
-Number of Unique Statements,20,axis,20
+Number of Unique Statements,20,base,11
+Number of Unique Statements,20,chaining,21
+Number of Unique Statements,20,axis,21
 Number of Unique Statements,20,stakeholder,21
-Number of Unique Statements,20,problem,20
-Cosine Similarity,20,base,0.8057381933861071
-Cosine Similarity,20,chaining,0.8152301831449282
-Cosine Similarity,20,axis,0.8212022845112072
-Cosine Similarity,20,stakeholder,0.8358325187276722
-Cosine Similarity,20,problem,0.829771524307381
-Number of Unique Statements,50,base,6
-Number of Unique Statements,50,chaining,11
-Number of Unique Statements,50,axis,50
-Number of Unique Statements,50,stakeholder,42
-Number of Unique Statements,50,problem,32
-Cosine Similarity,50,base,0.8059322206858675
-Cosine Similarity,50,chaining,0.8114189337863826
-Cosine Similarity,50,axis,0.8180460424174052
-Cosine Similarity,50,stakeholder,0.8286415170585066
-Cosine Similarity,50,problem,0.8373760958380548
+Number of Unique Statements,20,problem,21
+Cosine Similarity,20,base,0.8597060343673926
+Cosine Similarity,20,chaining,0.8692929004557923
+Cosine Similarity,20,axis,0.8736021827138548
+Cosine Similarity,20,stakeholder,0.861663350081011
+Cosine Similarity,20,problem,0.8715071729280524
+Number of Unique Statements,50,base,11
+Number of Unique Statements,50,chaining,59
+Number of Unique Statements,50,axis,59
+Number of Unique Statements,50,stakeholder,55
+Number of Unique Statements,50,problem,58
+Cosine Similarity,50,base,0.857979559005117
+Cosine Similarity,50,chaining,0.8855505135183356
+Cosine Similarity,50,axis,0.8699301801230804
+Cosine Similarity,50,stakeholder,0.880515678814834
+Cosine Similarity,50,problem,0.8795882494976927

@@ -107,6 +107,6 @@ class PolicyStakeholderGenerator(Agent):
 
 if __name__ == "__main__":
     # Module Testing
-    model_config = Config(model_type="OpenAI", model_name="gpt-3.5-turbo")
+    model_config = Config(model_type="OpenAI", model_name="gpt-4o-mini")
     agent = PolicyStakeholderGenerator(model_config)
     agent.create_policy_stakeholders("Social media and Children safety", statement_limit=20)

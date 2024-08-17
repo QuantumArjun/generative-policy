@@ -77,12 +77,13 @@ class PolicyStatementEvaluation(Agent):
         
  
 if __name__ == "__main__":
+    # python3 ./agents/policy_statements/policy_statement_eval.py
     # Module Testing
     logging.basicConfig(level=logging.WARNING)
     logger = logging.getLogger(PolicyStatementEvaluation.__name__)
     logger.setLevel(level=logging.INFO)
 
-    model_config = Config(model_type="OpenAI", model_name="gpt-3.5-turbo")
+    model_config = Config(model_type="OpenAI", model_name="gpt-4o-mini")
     agent = PolicyStatementGenerator(model_config)
     domain = "Lack of Access to Affordable Healthcare"
     statements_by_limit = {}

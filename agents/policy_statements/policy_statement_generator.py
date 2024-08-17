@@ -21,7 +21,7 @@ from config import Config
 AXIS_LIMIT = 10
 STAKEHOLDER_LIMIT = 10
 PROBLEM_LIMIT = 10
-ONE_ROUND_OF_GEN = True
+ONE_ROUND_OF_GEN = False
 
 
 class PolicyStatementMethod(Enum):

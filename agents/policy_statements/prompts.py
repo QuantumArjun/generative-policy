@@ -20,20 +20,33 @@ class PromptsForPolicyStatementGenerator:
             str: The system prompt for policy statements
         """
         return f"""
-        You are an assistant tasked with generating creative and impactful policy objectives for the domain of {domain}.
-        A policy objective is a clear, specific goal or desired outcome that an organization aims to achieve.
-        These objectives should be high-level statements that outline the intended direction or desired impact of policies within the domain.
-        For example, a policy objective might be: "Increase access to affordable housing for low-income families within urban areas."
+        You are an assistant tasked with generating creative and impactful policy objectives and strategies for the domain of {domain}.
         
-        Your task is to develop policy objectives that are:
-        - Specific: Clearly defined and focused on a particular goal or outcome.
-        - Measurable: Able to be tracked and assessed for progress and effectiveness.
-        - Achievable: Realistic and attainable within the given resources and constraints.
-        - Relevant: Directly related to the domain and addressing key issues or opportunities.
-        - Time-bound: Set within a clear timeframe for implementation and review.
-        - High-level: No implementation details.
-        - Concise: Use a limited number of words.
+        A policy objective is a clear, specific goal or desired outcome that a policy aims to achieve. 
+        It should be measurable, achievable, relevant, and time-bound (SMART).
+        
+        A policy strategy is a high-level approach or plan designed to accomplish a policy objective.
+        It outlines the general course of action to be taken, without specifying detailed tactics or implementation steps.
+        
+        Objectives and strategies should be:
 
+        - Specific: Clearly defined and focused.
+        - Measurable: Quantifiable or observable.
+        - Achievable: Realistic and attainable.
+        - Relevant: Aligned with the domain's goals.
+        - Time-bound: Indicating a timeframe for completion.
+        - High-level: Avoiding detailed implementation steps.
+        - Concise: Using clear and succinct language.
+
+        Good Examples:
+        <Statement>Objective: Reduce greenhouse gas emissions, Strategy: Invest in renewable energy infrastructure and promote energy efficiency.</Statement>
+        <Statement>Objective: Reduce particulate matter pollution in urban areas, Strategy: Enhance public transportation systems.</Statement>
+        <Statement>Objective: Increase organic farming practices, Strategy: Provide financial incentives and technical support for organic farmers.</Statement>
+        
+        Bad Examples:
+        <Statement>Objective: Make social media safer for children.</Statement> (Lacks policy strategy)
+        <Statement>Strategy: Develop a government-funded app that monitors children's social media activity and alerts parents to potential dangers.</Statement> (Focuses on implementation details, not the general approach)
+        <Statement>Objective: Improve Child Safety online, Strategy: Establish a grant program to support the creation of engaging and interactive online safety resources specifically tailored for children, ensuring that they are informative and age-appropriate, with funding sourced from the national budget.</Statement> (Focuses on implementation details, not the general approach)
         """
 
     def _get_domain_prompt(self, domain):
@@ -46,7 +59,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The domain prompt for policy statements
         """
-        return f"Provide a list of creative and impactful policy objectives for the domain of {domain}."
+        return f"Provide a list of creative and impactful policy objectives and strategies for the domain of {domain}."
 
     def _get_formatting_prompt(self):
         """
@@ -55,7 +68,9 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The formatting prompt for policy statements
         """
-        return f"Make sure each policy objective is wrapped with <Statement> at the beginning and a </Statement> followed by new line at the end."
+        return f"""
+        Format each policy objective and strategy as follows: <Statement>Objective: (The Policy Objective), Strategy: (The policy strategy)</Statement>
+        """
 
     def _get_policy_statement_explanation_prompt(self):
         """
@@ -64,6 +79,8 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy statement explanation prompt for policy statements
         """
+        # This is not needed anymore
+        return ""
         return """A policy objective is essentially the big-picture objective that a policy aims to achieve.
                 It's a broad statement that outlines the desired outcome or direction.
                 Policy objectives should be a sentence long description.
@@ -93,8 +110,8 @@ class PromptsForPolicyStatementGenerator:
             str: The generated policy statements prompt for policy statements
         """
         return f"""
-                So far, you have come up with the following policy objectives: {", ".join(policy_set)}. 
-                Please come up with new policy objectives that are completely different from the ones outlined above.
+                So far, you have come up with the following policy (objectives, strategies) pairs: {", ".join(policy_set)}. 
+                Please come up with new policy objectives and strategies that are completely different from the ones outlined above.
             """
 
     def _get_policy_axis_prompt(self, axis):
@@ -107,7 +124,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy axis prompt for policy statements
         """
-        return f"Each policy objective has to contribute to the following axis: {axis}."
+        return f"Each policy (objective, strategy) pair has to contribute to the following axis: {axis}."
 
     def _get_policy_axes_prompt(self, axes):
         """
@@ -119,7 +136,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy axis prompt for policy statements
         """
-        return f"Each policy objective has to contribute to one of the following axis: {", ".join(axes)}."
+        return f"Each policy (objective, strategy) pair has to contribute to one of the following axis: {", ".join(axes)}."
 
     def _get_policy_stakeholder_prompt(self, stakeholder):
         """
@@ -131,7 +148,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy stakeholder prompt for policy statements
         """
-        return f"Each policy objective has to be helping this stakeholder: {stakeholder}."
+        return f"Each policy (objective, strategy) pair has to be helping this stakeholder: {stakeholder}."
 
     def _get_policy_stakeholders_prompt(self, stakeholders):
         """
@@ -143,7 +160,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy stakeholder prompt for policy statements
         """
-        return f"Each policy objective has to be helping at least one of these stakeholders: {", ".join(stakeholders)}."
+        return f"Each policy (objective, strategy) pair has to be helping at least one of these stakeholders: {", ".join(stakeholders)}."
 
     def _get_policy_problem_prompt(self, problem):
         """
@@ -155,7 +172,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy problem prompt for policy statements
         """
-        return f"Each policy objective has to solve the following problem: {problem}."
+        return f"Each policy (objective, strategy) pair has to solve the following problem: {problem}."
 
     def _get_policy_problems_prompt(self, problems):
         """
@@ -167,7 +184,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy problem prompt for policy statements
         """
-        return f"Each policy objective has to solve at least one of the following problems: {", ".join(problems)}."
+        return f"Each policy (objective, strategy) pair has to solve at least one of the following problems: {", ".join(problems)}."
 
     def get_user_messsage_base(self, domain):
         """
@@ -177,9 +194,9 @@ class PromptsForPolicyStatementGenerator:
             str: The user message for base policy statement generation
         """
         return f"""
-            {self._get_policy_statement_explanation_prompt()}
-            {self._get_domain_prompt(domain)}
-            {self._get_formatting_prompt()}
+        {self._get_policy_statement_explanation_prompt()}
+        {self._get_domain_prompt(domain)}
+        {self._get_formatting_prompt()}
         """
 
     def get_user_message_chaining(self, domain, policy_set):
@@ -193,11 +210,11 @@ class PromptsForPolicyStatementGenerator:
             str: The user message for policy statement generation using chaining
         """
         return f"""
-                    {self._get_policy_statement_explanation_prompt()}
-                    {self._get_domain_prompt(domain)}
-                    {self._get_generated_policy_statements_prompt(policy_set)}
-                    {self._get_formatting_prompt()}
-                """
+        {self._get_policy_statement_explanation_prompt()}
+        {self._get_domain_prompt(domain)}
+        {self._get_generated_policy_statements_prompt(policy_set)}
+        {self._get_formatting_prompt()}
+        """
 
     def get_user_message_along_axis(self, domain, policy_set, axis):
         """
@@ -210,13 +227,13 @@ class PromptsForPolicyStatementGenerator:
             str: The user message for policy statement generation using along axis
         """
         return f"""
-                    {self._get_policy_statement_explanation_prompt()}
-                    {self._get_domain_prompt(domain)}
-                    {self._get_generated_policy_statements_prompt(policy_set)}
-                    {self._get_policy_axis_prompt(axis)}
-                    {self._get_generated_policy_statements_prompt(policy_set)}
-                    {self._get_formatting_prompt()}
-                """
+        {self._get_policy_statement_explanation_prompt()}
+        {self._get_domain_prompt(domain)}
+        {self._get_generated_policy_statements_prompt(policy_set)}
+        {self._get_policy_axis_prompt(axis)}
+        {self._get_generated_policy_statements_prompt(policy_set)}
+        {self._get_formatting_prompt()}
+        """
 
     def get_user_message_along_axis_and_stakeholder(self, domain, policy_set, axes, stakeholder):
         """
@@ -229,14 +246,14 @@ class PromptsForPolicyStatementGenerator:
             str: The user message for policy statement generation using along stakeholder
         """
         return f"""
-                    {self._get_policy_statement_explanation_prompt()}
-                    {self._get_domain_prompt(domain)}
-                    {self._get_generated_policy_statements_prompt(policy_set)}
-                    {self._get_policy_axes_prompt(axes)}
-                    {self._get_policy_stakeholder_prompt(stakeholder)}
-                    {self._get_generated_policy_statements_prompt(policy_set)}
-                    {self._get_formatting_prompt()}
-                """
+        {self._get_policy_statement_explanation_prompt()}
+        {self._get_domain_prompt(domain)}
+        {self._get_generated_policy_statements_prompt(policy_set)}
+        {self._get_policy_axes_prompt(axes)}
+        {self._get_policy_stakeholder_prompt(stakeholder)}
+        {self._get_generated_policy_statements_prompt(policy_set)}
+        {self._get_formatting_prompt()}
+        """
 
     def get_user_message_along_axis_and_stakeholder_and_problems(self, domain, policy_set, axes, stakeholders, problem):
         """
@@ -249,15 +266,15 @@ class PromptsForPolicyStatementGenerator:
             str: The user message for policy statement generation using along stakeholder
         """
         return f"""
-                    {self._get_policy_statement_explanation_prompt()}
-                    {self._get_domain_prompt(domain)}
-                    {self._get_generated_policy_statements_prompt(policy_set)}
-                    {self._get_policy_axes_prompt(axes)}
-                    {self._get_policy_stakeholder_prompt(stakeholders)}
-                    {self._get_policy_problem_prompt(problem)}
-                    {self._get_generated_policy_statements_prompt(policy_set)}
-                    {self._get_formatting_prompt()}
-                """
+        {self._get_policy_statement_explanation_prompt()}
+        {self._get_domain_prompt(domain)}
+        {self._get_generated_policy_statements_prompt(policy_set)}
+        {self._get_policy_axes_prompt(axes)}
+        {self._get_policy_stakeholder_prompt(stakeholders)}
+        {self._get_policy_problem_prompt(problem)}
+        {self._get_generated_policy_statements_prompt(policy_set)}
+        {self._get_formatting_prompt()}
+        """
 
     def get_uniqueness_system_prompt(self):
         """
@@ -266,7 +283,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The uniqueness system prompt for policy statements
         """
-        return "You are an assistant that helps decide if a new policy objective is different those already generated."
+        return "You are an assistant that helps decide if a new policy (objective, strategy) pair is valid and unique from those already generated."
 
     def get_uniqueness_user_message_prompt(self, statement_list, policy_statement):
         """
@@ -276,12 +293,15 @@ class PromptsForPolicyStatementGenerator:
             str: The uniqueness user message prompt for policy statements
         """
         return f"""
-            Give these current policy objectives: {', '.join(statement_list)}
-            and the new policy objective: {policy_statement}
-            output true if the new policy objective different than all of the current policy objectives, or false if it is a duplicate.
-            Also output false if the policy objective is not a valid policy objective. Output only one of two words: 'true' or 'false'.
+            Give these current policy (objectives, strategy) pairs: {', '.join(statement_list)}
+            and the new policy (objective, strategy) pair: {policy_statement}
+            output true if the new policy (objective, strategy) pair is different than all of the current policy pairs, or false if it is a duplicate.
+            Also output false if the policy (objective, strategy) pair is not valid, where valid means it adheres to defined criteria for policy objectives and strategies 
+            Output only one of two words: 'true' or 'false'.
             """
-    
+
+
 if __name__ == "__main__":
+    # python3 agents/policy_statements/prompts.py
     print(PromptsForPolicyStatementGenerator().get_system_prompt("Social Media and Child Safety"))
     print(PromptsForPolicyStatementGenerator().get_user_messsage_base("Social Media and Child Safety"))
