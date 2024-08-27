@@ -11,9 +11,9 @@ from utils.llm_wrapper import LLMWrapper
 import random
 
 class ElicitationEnvironment:
-    def __init__(self, domain, key_question, instruction_model_config, questioner_model_config, agent_list, num_rounds = 5, num_polis_rounds=3):
+    def __init__(self, domain, initial_statements, instruction_model_config, questioner_model_config, agent_list, num_rounds = 5, num_polis_rounds=3):
         self.domain = domain
-        self.key_question = key_question
+        self.initial_statements = initial_statements
         self.instruction_model_config = instruction_model_config
         self.questioner_model_config = questioner_model_config
         self.agent_list = agent_list
@@ -32,14 +32,14 @@ class ElicitationEnvironment:
         print("Running Question Session")
         self.run_question_session(self.num_rounds)
 
-        print("Eliciting Opinions")
-        self.elicit_initial_opinions()
+        # print("Eliciting Opinions")
+        # self.elicit_initial_opinions()
 
-        print("Gathering neighbor opinions")
-        self.ratings_matrix = self.run_neighbor_opinions()
+        # print("Gathering neighbor opinions")
+        # self.ratings_matrix = self.run_neighbor_opinions()
 
-        print("Eliciting Final Opinions")
-        self.elicit_final_opinions()
+        # print("Eliciting Final Opinions")
+        # self.elicit_final_opinions()
 
 
     def elicit_initial_opinions(self) -> None:
@@ -106,10 +106,19 @@ class ElicitationEnvironment:
         """
         llm = LLMWrapper(self.instruction_model_config)
         
-        system_prompt = f"""You are creating the instructions for an LLM-based questioner for the domain: {self.domain}. Your task is to provide clear and concise instructions for the questioner to follow. You should ensure that the questioner concise questions that elicit useful information from the user. The questions should require minimal effort to answer (e.g., yes/no questions, multiple-choice questions, etc.). Additionally, the questions should not repeat information already provided by the user."""
+        system_prompt = f"""You are creating the instructions for an LLM-based questioner that is going to question people about their stance on a political issue. The transcript of this conversation will be used to make "digital representatives" on people's behalf. Here is the list of policies that those "digital representatives" will be asked about: {self.initial_statements}.
+        
+        Your goal is to write a set of instructions for the questioner to follow. 
+        
+        Here is the list of policies that the questioner. Keep in mind, the questioner WILL NOT have access to the list of policies. It is your responsibility to ensure that your instructions contain the broad themes of this set of policies, as well as capture the main disagreements that the people may have, such that the questioner can find areas of disagreement. 
+        
+        Your task is to provide clear and concise instructions for the questioner to follow. You should ensure that the questioner concise questions that elicit useful information from the user. The questions should require minimal effort to answer (e.g., yes/no questions, multiple-choice questions, etc.). Additionally, the questions should not repeat information already provided by the user."""
         user_message = f""" Create the instructions for the LLM-based questioner for the domain: {self.domain}."""
 
         response = llm.generate_text(system_prompt=system_prompt, user_message=user_message)
+        
+        print(f"Instructions: {response}")
+        exit()
 
         self.questioner_instructions = response
 

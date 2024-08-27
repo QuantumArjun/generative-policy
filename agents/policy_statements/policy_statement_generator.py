@@ -325,6 +325,6 @@ if __name__ == "__main__":
     # Module Testing
     model_config = Config(model_type="OpenAI", model_name="gpt-3.5-turbo")
     agent = PolicyStatementGenerator(model_config)
-    statements = agent.create_policy_statements("Social media and Children safety", statement_limit=10,
+    statements = agent.create_policy_statements("Gun Rights in the United States", statement_limit=10,
                                                 generation_method=PolicyStatementMethod.PROBLEM)
     print(statements)
