@@ -26,6 +26,7 @@ if __name__ == "__main__":
     print("Creating personas...")
     # persona_list = PersonaGenerator(domain=domain, model_config=model_config, num_personas=5).generate_personas()
     persona_list = PersonaSampler(num_to_sample=5, dataset="oqa_guns").sample_personas()
+    print(persona_list[0])
     agent_list = batch_create_agents(agent_class=HumanSimulator, model_config=model_config, system_prompts=persona_list)
     print("Personas created!\n")
 
@@ -43,19 +44,6 @@ if __name__ == "__main__":
 
     policymaker = Policymaker(model_config=model_config)
     policymaker.create_policy_statements(domain)
-
-    #TODO - Elicitaiton Part:
-    #Minor 
-    # Fix rating so that you can pass an arg to rate the max 
-    # Pretty print the history for each agent 
-
-    #Major
-    #Tone down the archetypes, none of them change their opinion 
-    #Think of how and if I should demarcate the agents 
-
-    # Fix rating so that you can pass an arg to rate the max 
-    # Pretty print the history for each agent 
-
 
 
     

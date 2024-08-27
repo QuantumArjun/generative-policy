@@ -39,15 +39,31 @@ class PersonaSampler:
     def format_personas(self):
         for p in self.processed_personas:
             persona = "\n".join(p)
-            self.final_personas.append(persona)
-        
+            
+            sections = persona.split("', '")
+            persona_info_raw = ""
+            questions = []
+
+            for section in sections:
+                if "A bit about me:" in section:
+                    persona_info_raw = section.replace("A bit about me:", "").strip()
+                else:
+                    question_answer = section.split("\\n")
+                    question = question_answer[0].replace("Question: ", "").strip()
+                    answer = question_answer[1].replace("My Answer: ", "").strip() if len(question_answer) > 1 else "No answer provided"
+                    questions.append((question, answer))
+            
+            persona_string = "You are a helpful assistant who is representing a person. Here is the information that the person provided. Your goal is to faithfully represent what they would say. \n\n"
+            persona_string += "Person's Responses: \n"
+            
+            persona_string += f"A bit about me:{persona_info_raw}\n\n"
+            
+            self.final_personas.append(persona_string)
+                
 
     def process_personas(self):
         processor = PersonaProcessor(self.raw_personas, self.dataset)
         self.processed_personas = processor.process_personas()
-        for p in self.processed_personas:
-            print(p)
-            exit()
 
 class PersonaProcessor:
     def __init__(self, personas, dataset):
@@ -87,12 +103,11 @@ class PersonaProcessor:
             qa_pairs = []
             for index, question in enumerate(self.questions):
                 answer = persona.all_fields[index]
-                print(question)
-                print(answer)
                 if answer is not None and answer != "" and answer != " ":
                     qa_pairs.append(f"Question: {question}\nMy Answer: {answer}")
                 else:
-                    qa_pairs.append(f"Question: {question}\nAnswer: No answer provided")
+                    # qa_pairs.append(f"Question: {question}\nAnswer: No answer provided")
+                    pass
             qa_pairs.insert(0, "A bit about me: " + persona.identityParagraph())
             processed_personas.append(qa_pairs)
         return processed_personas
