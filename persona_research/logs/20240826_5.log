@@ -1,0 +1,17 @@
+2024-08-26 23:40:54,504 - MyLogger - DEBUG - This is a regular debug message.
+2024-08-26 23:40:54,504 - MyLogger - INFO - Personas Module
+2024-08-26 23:40:54,505 - MyLogger - INFO - Arguments
+2024-08-26 23:40:54,505 - MyLogger - INFO - Dataset w26
+2024-08-26 23:40:54,505 - MyLogger - INFO - Model Name gpt-4o
+2024-08-26 23:40:54,505 - MyLogger - INFO - # Steps 1
+2024-08-26 23:40:54,505 - MyLogger - INFO - # Participants Sampled (Train) 2
+2024-08-26 23:40:54,505 - MyLogger - INFO - # Participants Sampled (Test) 0
+2024-08-26 23:40:54,505 - MyLogger - INFO - # Train Questions 0
+2024-08-26 23:40:54,505 - MyLogger - INFO - # Val Questions 5
+2024-08-26 23:40:54,505 - MyLogger - INFO - # Optimizer Context 5
+2024-08-26 23:40:54,652 - MyLogger - INFO - Train Questions: []
+2024-08-26 23:40:54,652 - MyLogger - INFO - Key Answer Choices: []
+2024-08-26 23:40:54,652 - MyLogger - INFO - Val Questions: ['As far as you know, how many of your friends, if any, own guns?', 'How often, if ever, do you attend gun shows', 'How often, if ever, do you go shooting or to a gun range?', 'How often, if ever, do you watch TV programs about guns or watch gun-oriented videos', 'Thinking about gun owners who do not have children in their home how important do you think it is for them to: Keep their shooting skills up-to-date']
+2024-08-26 23:40:54,652 - MyLogger - INFO - Key Answer Choices: [['All or most', 'Some', 'Only a few', 'None'], ['Often', 'Sometimes', 'Hardly ever', 'Never'], ['Often', 'Sometimes', 'Rarely', 'Never'], ['Often', 'Sometimes', 'Hardly ever', 'Never'], ['Essential', 'Important but not essential', 'Not important', 'Should not be done']]
+2024-08-26 23:40:54,652 - MyLogger - INFO - Context Questions: ['Are you currently a member of a gun or shooting club or gun range', 'Thinking about gun owners who have children in their home, how important do you think it is for them to: Advise visitors that there are guns in the house', 'How often, if ever, do you go shooting or to a gun range?', 'Have you ever been a victim of a violent crime, whether a gun was used or not?', 'Thinking about people who commit suicide using a gun, which comes closer to your view, even if neither is exactly right?']
+2024-08-26 23:40:54,707 - MyLogger - INFO - Optimizer Step 0

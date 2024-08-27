@@ -1,0 +1,21 @@
+2024-08-26 23:38:13,320 - MyLogger - DEBUG - This is a regular debug message.
+2024-08-26 23:38:13,321 - MyLogger - INFO - Personas Module
+2024-08-26 23:38:13,321 - MyLogger - INFO - Arguments
+2024-08-26 23:38:13,321 - MyLogger - INFO - Dataset w26
+2024-08-26 23:38:13,321 - MyLogger - INFO - Model Name GPT-4o
+2024-08-26 23:38:13,321 - MyLogger - INFO - # Steps 1
+2024-08-26 23:38:13,321 - MyLogger - INFO - # Participants Sampled (Train) 2
+2024-08-26 23:38:13,321 - MyLogger - INFO - # Participants Sampled (Test) 0
+2024-08-26 23:38:13,321 - MyLogger - INFO - # Train Questions 0
+2024-08-26 23:38:13,321 - MyLogger - INFO - # Val Questions 10
+2024-08-26 23:38:13,321 - MyLogger - INFO - # Optimizer Context 5
+2024-08-26 23:38:24,530 - MyLogger - INFO - Not enough participants with key fields, resampling...
+2024-08-26 23:38:36,323 - MyLogger - INFO - Not enough participants with key fields, resampling...
+2024-08-26 23:38:48,258 - MyLogger - INFO - Not enough participants with key fields, resampling...
+2024-08-26 23:39:00,099 - MyLogger - INFO - Not enough participants with key fields, resampling...
+2024-08-26 23:39:00,209 - MyLogger - INFO - Train Questions: []
+2024-08-26 23:39:00,209 - MyLogger - INFO - Key Answer Choices: []
+2024-08-26 23:39:00,209 - MyLogger - INFO - Val Questions: ['Thinking about gun owners who have children in their home, how important do you think it is for them to: Keep their shooting skills up-to-date', 'How often, if ever, do you go shooting or to a gun range?', 'How often, if ever, did you go shooting or to a gun range when you were growing up?', 'Thinking about people who commit suicide using a gun, which comes closer to your view, even if neither is exactly right?', 'Would you say the following was a reason or was not a reason why there were guns in your household when you were growing up? For protection', "And would you say you never carry a handgun or pistol because you don't want to or for some other reason?", 'Thinking about gun owners who have children in their home, how important do you think it is for them to: Keep all of their guns in a locked place', 'How often, if ever, do you listen to gun-oriented podcasts or radio shows', 'Regardless of whether or not you own a gun, have you ever fired a gun?', 'Thinking about gun owners who have children in their home, how important do you think it is for them to: Keep all of their guns unloaded']
+2024-08-26 23:39:00,209 - MyLogger - INFO - Key Answer Choices: [['Essential', 'Important but not essential', 'Not important', 'Should not be done'], ['Often', 'Sometimes', 'Rarely', 'Never'], ['Often', 'Sometimes', 'Hardly ever', 'Never'], ['They would find a way to do it whether they had access to a gun or not', "They would be less likely to do it if they didn't have access to a gun"], ['Yes, was a reason', 'No, was not a reason'], ["Don't want to carry", 'Some other reason'], ['Essential', 'Important but not essential', 'Not important', 'Should not be done'], ['Often', 'Sometimes', 'Hardly ever', 'Never'], ['Yes, I have fired a gun', 'No, I have never fired a gun'], ['Essential', 'Important but not essential', 'Not important', 'Should not be done']]
+2024-08-26 23:39:00,209 - MyLogger - INFO - Context Questions: ['In general, as far as you know, how many of the guns in your home would you say are kept in a locked place?', 'Thinking about gun owners who have children in their home, how important do you think it is for them to: Advise visitors with children that there are guns in the house', 'Thinking about the people in the community where you spent the majority of time when you were growing up, as far as you know, how many people owned guns?', 'How often, if ever, do you attend gun shows', 'How often, if ever, do you listen to gun-oriented podcasts or radio shows']
+2024-08-26 23:39:00,262 - MyLogger - INFO - Optimizer Step 0

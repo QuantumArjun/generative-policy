@@ -1,0 +1,18 @@
+2024-08-26 23:43:09,717 - MyLogger - DEBUG - This is a regular debug message.
+2024-08-26 23:43:09,717 - MyLogger - INFO - Personas Module
+2024-08-26 23:43:09,717 - MyLogger - INFO - Arguments
+2024-08-26 23:43:09,717 - MyLogger - INFO - Dataset w26
+2024-08-26 23:43:09,717 - MyLogger - INFO - Model Name gpt-4o
+2024-08-26 23:43:09,717 - MyLogger - INFO - # Steps 1
+2024-08-26 23:43:09,717 - MyLogger - INFO - # Participants Sampled (Train) 2
+2024-08-26 23:43:09,718 - MyLogger - INFO - # Participants Sampled (Test) 0
+2024-08-26 23:43:09,718 - MyLogger - INFO - # Train Questions 0
+2024-08-26 23:43:09,718 - MyLogger - INFO - # Val Questions 5
+2024-08-26 23:43:09,718 - MyLogger - INFO - # Optimizer Context 5
+2024-08-26 23:43:21,016 - MyLogger - INFO - Not enough participants with key fields, resampling...
+2024-08-26 23:43:21,094 - MyLogger - INFO - Train Questions: []
+2024-08-26 23:43:21,094 - MyLogger - INFO - Key Answer Choices: []
+2024-08-26 23:43:21,094 - MyLogger - INFO - Val Questions: ['How much of a problem was gun violence in the community where you spent the majority of time when you were growing up?', 'How much, if at all, do you think the amount of gun violence in movies and television contributes to gun violence in the country today?', 'How often, if ever, do you attend gun shows', 'Thinking about when you were growing up, as far as you know, were there ever any guns in your household or not?', 'In general, is the gun in your home kept in a locked place, or not?']
+2024-08-26 23:43:21,094 - MyLogger - INFO - Key Answer Choices: [['A very big problem', 'A moderately big problem', 'A small problem', 'Not a problem at all'], ['A great deal', 'A fair amount', 'Not too much', 'Not at all'], ['Often', 'Sometimes', 'Hardly ever', 'Never'], ['Yes, there were guns in my household', 'No, there were no guns in my household', 'I am not sure if there were guns in my household'], ['Yes, kept in a locked place', 'No, not kept in a locked place']]
+2024-08-26 23:43:21,094 - MyLogger - INFO - Context Questions: ['How often, if ever, do you visit websites about guns, hunting or other shooting sports', 'Thinking about gun owners who do not have children in their home how important do you think it is for them to: Advise visitors with children that there are guns in the house', "Thinking about when you're at home, would you say there is a gun that is both loaded and easily accessible to you", 'How often, if ever, did you use air guns, such as paintball, BB or pellet guns when you were growing up?', 'How much, if at all, do you worry about the following happening to you? Not being able to pay your bills']
+2024-08-26 23:43:21,145 - MyLogger - INFO - Optimizer Step 0

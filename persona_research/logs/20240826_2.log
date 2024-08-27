@@ -1,0 +1,15 @@
+2024-08-26 23:37:17,946 - MyLogger - DEBUG - This is a regular debug message.
+2024-08-26 23:37:17,946 - MyLogger - INFO - Personas Module
+2024-08-26 23:37:17,946 - MyLogger - INFO - Arguments
+2024-08-26 23:37:17,946 - MyLogger - INFO - Dataset w26
+2024-08-26 23:37:17,946 - MyLogger - INFO - Model Name GPT-4o
+2024-08-26 23:37:17,947 - MyLogger - INFO - # Steps 1
+2024-08-26 23:37:17,947 - MyLogger - INFO - # Participants Sampled (Train) 2
+2024-08-26 23:37:17,947 - MyLogger - INFO - # Participants Sampled (Test) 0
+2024-08-26 23:37:17,947 - MyLogger - INFO - # Train Questions 0
+2024-08-26 23:37:17,947 - MyLogger - INFO - # Val Questions 10
+2024-08-26 23:37:17,947 - MyLogger - INFO - # Optimizer Context 8
+2024-08-26 23:37:28,874 - MyLogger - INFO - Not enough participants with key fields, resampling...
+2024-08-26 23:37:39,860 - MyLogger - INFO - Not enough participants with key fields, resampling...
+2024-08-26 23:37:50,970 - MyLogger - INFO - Not enough participants with key fields, resampling...
+2024-08-26 23:38:02,611 - MyLogger - INFO - Not enough participants with key fields, resampling...

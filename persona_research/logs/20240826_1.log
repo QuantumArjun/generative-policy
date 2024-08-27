@@ -1,0 +1,11 @@
+2024-08-26 23:36:07,226 - MyLogger - DEBUG - This is a regular debug message.
+2024-08-26 23:36:07,226 - MyLogger - INFO - Personas Module
+2024-08-26 23:36:07,226 - MyLogger - INFO - Arguments
+2024-08-26 23:36:07,226 - MyLogger - INFO - Dataset w26
+2024-08-26 23:36:07,226 - MyLogger - INFO - Model Name gpt-4-1106-preview
+2024-08-26 23:36:07,226 - MyLogger - INFO - # Steps 1
+2024-08-26 23:36:07,226 - MyLogger - INFO - # Participants Sampled (Train) 2
+2024-08-26 23:36:07,226 - MyLogger - INFO - # Participants Sampled (Test) 0
+2024-08-26 23:36:07,226 - MyLogger - INFO - # Train Questions 0
+2024-08-26 23:36:07,226 - MyLogger - INFO - # Val Questions 10
+2024-08-26 23:36:07,226 - MyLogger - INFO - # Optimizer Context 8

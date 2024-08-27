@@ -3,6 +3,7 @@ import os
 import sys
 from dotenv import load_dotenv
 from agents.persona_generator import PersonaGenerator
+from agents.persona_sampler import PersonaSampler
 from config import Config
 from utils.agent_helper import batch_create_agents, batch_save_agents, batch_load_agents, print_agents, batch_create_representatives
 from agents.agent import Agent
@@ -20,12 +21,13 @@ if __name__ == "__main__":
     domain = "Gun Control in America"
     key_question = "What is your opinion on gun control in America?"
 
-    #Code to Create Personas, currently commented out
+    #Code to Create Personas, or Sample Personas from OpinionQA
 
-    # print("Creating personas...")
+    print("Creating personas...")
     # persona_list = PersonaGenerator(domain=domain, model_config=model_config, num_personas=5).generate_personas()
-    # agent_list = batch_create_agents(agent_class=HumanSimulator, model_config=model_config, system_prompts=persona_list)
-    # print("Personas created!\n")
+    persona_list = PersonaSampler(num_to_sample=5, dataset="oqa_guns").sample_personas()
+    agent_list = batch_create_agents(agent_class=HumanSimulator, model_config=model_config, system_prompts=persona_list)
+    print("Personas created!\n")
 
     # print("Spinning up elicitation environment...")
     # elicitation_environment = ElicitationEnvironment(domain=domain, key_question=key_question, instruction_model_config=model_config, questioner_model_config=model_config, agent_list=agent_list)
