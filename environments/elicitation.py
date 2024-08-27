@@ -141,7 +141,3 @@ class ElicitationEnvironment:
         for _ in range(num_rounds):
             question = self.questioner_agent.respond(response)
             response = agent.respond(question,  q_tag = "<Question>", a_tag = "<Your Answer>")
-    
-
-
-

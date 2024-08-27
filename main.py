@@ -38,9 +38,20 @@ if __name__ == "__main__":
     initial_statements = policy_statement_agent.create_policy_statements("Gun Legislation in the United States", statement_limit=75,
                                                 generation_method=PolicyStatementMethod.PROBLEM)
     
+    
+    # Save initial statements to file
+    with open("initial_statements.txt", "w") as f:
+        for statement in initial_statements:
+            f.write(statement + "\n")
+    
     # Step 3: Elicitation of preferences
     # Use the initial set of policies to elicit preferences from the humans 
-
+    
+    # with open("initial_statements.txt", "r") as f:
+    #     initial_statements = f.read().split("\n")
+    # initial_statements = [x.strip() for x in initial_statements if x.strip() != ""]
+    
+    
     print("Spinning up elicitation environment...")
     elicitation_environment = ElicitationEnvironment(domain=domain, initial_statements=initial_statements, instruction_model_config=model_config, questioner_model_config=model_config, agent_list=agent_list)
     elicitation_environment.run_elicitation()
