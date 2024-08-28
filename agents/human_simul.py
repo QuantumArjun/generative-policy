@@ -40,4 +40,6 @@ class HumanSimulator(Agent):
         else:
             return -1
     
+    def ask_about_policy(self, policy_prompt) -> str:
+        return self.respond(policy_prompt)
     

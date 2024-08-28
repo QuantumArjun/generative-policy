@@ -61,8 +61,7 @@ class PolicyCuration(Agent):
 		def vote_on_policy_goal(self, policy_goal: str) -> list:
 				votes = []
 				for human_sim in self.human_sims:
-						# vote = human_sim.rate_opinion(policy_goal)
-						vote = random.randint(0, 1)
+						vote = human_sim.rate_opinion(policy_goal)
 						votes.append(vote)
 				return votes
 
