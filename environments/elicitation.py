@@ -31,7 +31,10 @@ class ElicitationEnvironment:
         """
         print("Running Question Session")
         self.run_question_session(self.num_rounds)
+        
+        return self.agent_list
 
+        # Not part of our current methodology
         # print("Eliciting Opinions")
         # self.elicit_initial_opinions()
 
@@ -118,7 +121,6 @@ class ElicitationEnvironment:
         response = llm.generate_text(system_prompt=system_prompt, user_message=user_message)
         
         print(f"Instructions: {response}")
-        exit()
 
         self.questioner_instructions = response
 
@@ -141,3 +143,5 @@ class ElicitationEnvironment:
         for _ in range(num_rounds):
             question = self.questioner_agent.respond(response)
             response = agent.respond(question,  q_tag = "<Question>", a_tag = "<Your Answer>")
+            
+            

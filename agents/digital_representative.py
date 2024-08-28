@@ -21,7 +21,7 @@ class DigitalRepresentative(Agent):
         Use the human's conversation to create a digital representative
         """
 
-        system_prompt = "You are trying to emulate a human agent. The human agent you are trying to emulate has the following conversation history: \n"
+        system_prompt = "You are trying to how a specific human might respond policies. The human you are trying to emulate has the following conversation history: \n. "
         for message in human_agent.history:
             system_prompt += f"{message}\n"
         
