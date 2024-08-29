@@ -2,6 +2,7 @@ from typing import List
 import os
 import sys
 import csv
+import json 
 import numpy as np
 from dotenv import load_dotenv
 from agents.persona_generator import PersonaGenerator
@@ -12,6 +13,7 @@ from agents.agent import Agent
 from agents.human_simul import HumanSimulator
 from agents.policy_statements.policy_statement_generator import PolicyStatementGenerator, PolicyStatementMethod
 from agents.policy_curation.policy_curation import PolicyCuration
+from agents.policy_curation.policy_refinement import PolicyRefinement
 from agents.policymaker import Policymaker, ScoringSystem
 from agents.digital_representative import DigitalRepresentative
 from utils.name_generator import NameGenerator
@@ -21,7 +23,7 @@ if __name__ == "__main__":
     # Load environment variables and create config
     load_dotenv(dotenv_path='/.env')
 
-    model_config = Config(model_type="OpenAI", model_name="gpt-3.5-turbo")
+    model_config = Config(model_type="OpenAI", model_name="gpt-4o")
     domain = "Gun Control in America"
     key_question = "What is your opinion on gun control in America?"
 
@@ -89,15 +91,20 @@ if __name__ == "__main__":
     
     print("Running Initial Round of Votes...")
     
-    policy_curator = PolicyCuration(model_config, list(digital_representatives), initial_statements)
+    policy_curator = PolicyCuration(model_config, list(digital_representatives.values()), initial_statements)
     policy_votes, policy_goals = policy_curator.get_policy_goals(num_to_choose)
     
     print("Initial round of votes complete!\n")
     
+    #save policy goals and policy votes to file
+    #save policy goals to file
+    with open('./agents/policy_curation/data/policy_goals.json', 'w+') as f:
+        json.dump(policy_goals, f, indent=4)
+    
     # Save vote matrix to file
     with open('./agents/policy_curation/data/policy_voting.csv', 'w+', newline='', encoding='utf-8') as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["Policy Goal Type", "Policy", ", ".join([rep.name for rep in digital_representatives]), "Vote %"])
+        csv_writer.writerow(["Policy Goal Type", "Policy", ", ".join(list(digital_representatives.keys())), "Vote %"])
         for policy_goal_type, policies in policy_goals.items():
                 for policy in policies:
                     if policy_goal_type == "contentious":
@@ -111,7 +118,25 @@ if __name__ == "__main__":
     #------------------------------------------------------------------------------
     # Step 6: Policy Refinement
     
-    #TODO 
+    #Read in policy goals from file
+    policy_goals = None
+    with open('./agents/policy_curation/data/policy_goals.json', 'r') as f:
+        policy_goals = json.load(f)
+    
+    policy_votes = None
+    #Read policy votes from file 
+    with open('./agents/policy_curation/data/policy_voting.csv', 'r') as f:
+        reader = csv.reader(f)
+        next(reader)
+        policy_votes = {row[1]: [float(x) for x in row[3].split(",")] for row in reader}
+        
+    print("Running Policy Refinement...")
+    policy_refinement = PolicyRefinement(model_config, domain, list(digital_representatives.values()))
+    new_policy_goals = policy_refinement.update_policy_goals(policy_votes, policy_goals)
+    
+    #save new policy goals to file
+    with open('./agents/policy_curation/data/policy_goals_after_refinement.json', 'w+') as f:
+        json.dump(new_policy_goals, f, indent=4)
     #------------------------------------------------------------------------------
     
     #------------------------------------------------------------------------------
@@ -123,7 +148,26 @@ if __name__ == "__main__":
     #------------------------------------------------------------------------------
     # Step 8: Iterate (Goal -> Strategy -> Implementation)
     
-    #TODO
+    #Read in policy goals from file
+    new_policy_goals = None
+    with open('./agents/policy_curation/data/policy_goals_after_refinement.json', 'r') as f:
+        new_policy_goals = json.load(f)
+    
+    print("Running Policy Iteration...")
+    policy_curator = PolicyCuration(model_config, list(digital_representatives.values()), new_policy_goals)
+    policy_votes, policy_goals = policy_curator.get_policy_goals(num_to_choose)
+    
+    with open('./agents/policy_curation/data/policy_voting_after_iteration.csv', 'w+', newline='', encoding='utf-8') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["Policy Goal Type", "Policy", ", ".join(list(digital_representatives.keys())), "Vote %"])
+        for policy_goal_type, policies in policy_goals.items():
+                for policy in policies:
+                    if policy_goal_type == "contentious":
+                        votes = policy_votes.get(policy[0]) + policy_votes.get(policy[1])
+                    else:
+                        votes = policy_votes.get(policy, [])
+                    popularity = sum(votes) / len(votes)
+                    csv_writer.writerow([policy_goal_type, policy, votes, popularity])
     #------------------------------------------------------------------------------
     
     #------------------------------------------------------------------------------

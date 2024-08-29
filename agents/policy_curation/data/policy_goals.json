@@ -1,0 +1,17 @@
+{
+    "popular": [
+        "objective: address the issue of ghost guns in the united states, strategy: implement stringent regulations requiring serial numbers and background checks for all gun parts and kits to prevent the assembly of untraceable firearms.",
+        "objective: promote community involvement in preventing straw purchases, strategy: conduct nationwide awareness campaigns in partnership with local community centers, schools, and organizations to educate the public on recognizing and reporting suspicious activities related to illegal gun purchases, fostering a culture of vigilance and collaboration.",
+        "objective: increase community impact in promoting adherence to child access prevention laws, strategy: partner with local law enforcement agencies to conduct regular community workshops and events focused on educating parents and caregivers about safe gun storage practices and the legal responsibilities under child access prevention laws.",
+        "objective: reduce illegal gun trafficking across state lines by 20% within 4 years, strategy: implement a national gun trafficking task force composed of federal agents and state law enforcement to specifically target and dismantle interstate gun trafficking networks.",
+        "objective: increase transparency in the application of gun violence restraining orders, strategy: establish a public reporting system that provides anonymized data on the issuance and outcomes of gun violence restraining orders, enhancing accountability and understanding of how these orders are utilized."
+    ],
+    "controversial": [
+        "objective: promote inclusion in background check procedures, strategy: institute cultural competency training for background check agents to sensitively handle diverse backgrounds and experiences of gun owners, ensuring fair and unbiased evaluations during the check process.",
+        "objective: enhance mental health screening for gun owners, strategy: develop a national program to provide mental health evaluations for individuals applying for gun permits.",
+        "objective: enhance privacy and security for gun owners in gun-free zones, strategy: implement encrypted access control systems at entrances of gun-free zones that require biometric authentication for individuals carrying firearms, ensuring privacy and security while preventing unauthorized access.",
+        "objective: increase technology integration in mental health screenings for gun owners, strategy: introduce automated mental health assessment tools and virtual reality simulations to enhance the accuracy and efficiency of mental health evaluations required for gun permit applications, utilizing innovative technology for comprehensive assessments.",
+        "objective: increase transparency in firearm transactions to deter illegal gun trafficking, strategy: introduce a national firearm registration system that tracks the ownership transfer of firearms through a centralized database accessible to law enforcement, facilitating the identification of illegally trafficked guns and holding owners accountable."
+    ],
+    "contentious": []
+}

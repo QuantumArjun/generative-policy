@@ -77,13 +77,13 @@ def batch_create_representatives(agent_list: List[Agent], model_config: Config) 
     :param model_config: The model configuration to use for the digital representatives.
     :return: List of digital representatives.
     """
-    rep_list = []
+    rep_dict = {}
     name_gen = NameGenerator()
     for agent in agent_list:
         digital_rep = DigitalRepresentative(model_config = model_config, human_agent=agent, name=name_gen.generate_random_first_name())
-        rep_list.append(digital_rep)
+        rep_dict[digital_rep.name] = digital_rep
     
-    return rep_list
+    return rep_dict
 
 def print_agents(agent_list: List[Agent]) -> None:
     """

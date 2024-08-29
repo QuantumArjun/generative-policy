@@ -12,6 +12,7 @@ from utils.llm_wrapper import LLMWrapper
 from agents.policy_statements.policy_statement_generator import PolicyStatementGenerator, PolicyStatementMethod
 from agents.policy_curation.prompts import PromptsForPolicyCuration
 from agents.human_simul import HumanSimulator
+from agents.digital_representative import DigitalRepresentative
 from agents.agent import Agent
 import random
 import logging
@@ -26,7 +27,7 @@ class PolicyCurationtMethod(Enum):
 
 
 class PolicyCuration(Agent):
-		def __init__(self, model_config, human_sims: list = [], policy_goals: list = []):
+		def __init__(self, model_config, digital_representatives: list = [], policy_goals: list = []):
 				"""
 				Initializes the Policy Curation agent with the given model configuration.
 
@@ -37,7 +38,7 @@ class PolicyCuration(Agent):
 				system_prompt = self.prompts.get_system_prompt()
 				super().__init__(model_config=model_config, system_prompt=system_prompt)
 				self.logger = logging.getLogger(__name__)
-				self.human_sims = human_sims
+				self.digital_representatives = digital_representatives
 				self.policy_goals = policy_goals
 
 		def choose_policy_goals(self, num_policy_goals: int, policy_curation_method=PolicyCurationtMethod.RANDOM) -> list:
@@ -60,8 +61,8 @@ class PolicyCuration(Agent):
 
 		def vote_on_policy_goal(self, policy_goal: str) -> list:
 				votes = []
-				for human_sim in self.human_sims:
-						vote = human_sim.rate_opinion(policy_goal)
+				for digital_representative in self.digital_representatives:
+						vote = digital_representative.rate_opinion(policy_goal)
 						votes.append(vote)
 				return votes
 
