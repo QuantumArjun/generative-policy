@@ -39,7 +39,6 @@ if __name__ == "__main__":
     
     print("Personas created!\n")
     
-    # batch_save_agents(agent_list)
     # agent_list = batch_load_agents("saved_agents/batch_10")
     #------------------------------------------------------------------------------
     
@@ -47,15 +46,18 @@ if __name__ == "__main__":
     # Step 2: Policy Statement Generation
     # Code to create initial set of policy statements
     
-    # policy_statement_agent = PolicyStatementGenerator(model_config)
-    # initial_statements = policy_statement_agent.create_policy_statements("Gun Legislation in the United States", statement_limit=75,
-    #                                             generation_method=PolicyStatementMethod.PROBLEM)
+    print("Creating Policy Statements...")
+    policy_statement_agent = PolicyStatementGenerator(model_config)
+    initial_statements = policy_statement_agent.create_policy_statements("Gun Legislation in the United States", statement_limit=75,
+                                                generation_method=PolicyStatementMethod.PROBLEM)
+
+    print("Policy Statements created!\n")
     
     
     # Save initial statements to file
-    # with open("initial_statements.txt", "w") as f:
-    #     for statement in initial_statements:
-    #         f.write(statement + "\n")
+    with open("initial_statements.txt", "w") as f:
+        for statement in initial_statements:
+            f.write(statement + "\n")
     #------------------------------------------------------------------------------
     
     #------------------------------------------------------------------------------
@@ -74,6 +76,8 @@ if __name__ == "__main__":
     elicitation_environment = ElicitationEnvironment(domain=domain, initial_statements=initial_statements, instruction_model_config=model_config, questioner_model_config=model_config, agent_list=agent_list)
     updated_agent_list = elicitation_environment.run_elicitation()
     
+    batch_save_agents(updated_agent_list)
+    
     print("Elicitation complete!\n")
     #------------------------------------------------------------------------------
     
@@ -91,8 +95,12 @@ if __name__ == "__main__":
     
     print("Running Initial Round of Votes...")
     
+    print("Testing Initial Statements #1", initial_statements[0])
+    
     policy_curator = PolicyCuration(model_config, list(digital_representatives.values()), initial_statements)
     policy_votes, policy_goals = policy_curator.get_policy_goals(num_to_choose)
+    
+    print("Testing Policy Goals #3", policy_goals["popular"][0])
     
     print("Initial round of votes complete!\n")
     

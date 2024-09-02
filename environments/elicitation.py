@@ -99,7 +99,8 @@ class ElicitationEnvironment:
 
         self.create_instructions()
         self.create_questioner()
-        for agent in self.agent_list:
+        for count, agent in enumerate(self.agent_list):
+            print(f"Questioning #{count}")
             self.question_agent(agent, num_rounds)
             self.questioner_agent.reset_history()
     

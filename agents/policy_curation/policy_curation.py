@@ -105,6 +105,7 @@ class PolicyCuration(Agent):
 				min_contentious_corr: float = -0.5
 		) -> dict:
 				policy_goals = self.choose_policy_goals(num_goals_to_choose, policy_curation_method)
+				print("Policy Goals 2", policy_goals[0])
 				policy_votes = self.vote_on_policy(policy_goals)
 				pop_policies = self.get_popular_policy_goals(policy_votes, num_popular_policy_goals)
 				cont_policies = self.get_controversial_policy_goals(policy_votes, num_controversial_policy_goals)
