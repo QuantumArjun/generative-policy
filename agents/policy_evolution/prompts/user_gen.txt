@@ -1,0 +1,5 @@
+The goal of the campaign is to change the readers attitude towards the following question: {target_attitude}.
+The target audience is: {target_audience}. 
+Suggest edits for this message: {message}
+Do not make too many edits to the message. Most of the message should stay the same.
+Only 20% of the message should be edited!
