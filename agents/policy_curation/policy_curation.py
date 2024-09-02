@@ -100,15 +100,13 @@ class PolicyCuration(Agent):
 				self,
 				num_goals_to_choose: int,
 				policy_curation_method=PolicyCurationtMethod.ALL_POLICIES,
-				num_popular_policy_goals: int = 5,
-				num_controversial_policy_goals: int = 5,
 				min_contentious_corr: float = -0.5
 		) -> dict:
 				policy_goals = self.choose_policy_goals(num_goals_to_choose, policy_curation_method)
 				print("Policy Goals 2", policy_goals[0])
 				policy_votes = self.vote_on_policy(policy_goals)
-				pop_policies = self.get_popular_policy_goals(policy_votes, num_popular_policy_goals)
-				cont_policies = self.get_controversial_policy_goals(policy_votes, num_controversial_policy_goals)
+				pop_policies = self.get_popular_policy_goals(policy_votes, num_goals_to_choose // 3)
+				cont_policies = self.get_controversial_policy_goals(policy_votes, num_goals_to_choose // 3)
 				cont_pairs = self.get_contentious_policy_goals(policy_votes, min_corr=min_contentious_corr)
 				policy_goals = {"popular": pop_policies, "controversial": cont_policies, "contentious": cont_pairs}
 				return policy_votes, policy_goals
