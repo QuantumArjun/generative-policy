@@ -29,7 +29,7 @@ class PolicyRefinement(Agent):
 					model_config: The configuration for the model.
 				"""
 				self.prompts = PromptsForPolicyRefinment()
-				system_prompt = self.prompts.get_system_prompt()
+				system_prompt = self.prompts.get_system_prompt(domain)
 				super().__init__(model_config=model_config, system_prompt=system_prompt)
 				self.logger = logging.getLogger(__name__)
 				self.domain = domain
@@ -68,7 +68,7 @@ class PolicyRefinement(Agent):
 				refined_prompt = self.prompts.get_refinement_prompt(self.domain, policy, feedback)
 
 				refined_policy = LLMWrapper(self.model_config).generate_text(
-					system_prompt=self.prompts.get_system_prompt(),
+					system_prompt=self.prompts.get_system_prompt(domain),
 					user_message=refined_prompt
 				)
 
@@ -95,7 +95,7 @@ class PolicyRefinement(Agent):
 			new_policy_goals = []
 			for p1, p2 in policy_goals:
 				response = LLMWrapper(self.model_config).generate_text(
-					system_prompt=self.prompts.get_system_prompt(),
+					system_prompt=self.prompts.get_system_prompt(domain),
 					user_message=self.prompts.get_contentious_policy_prompt(self.domain, p1 ,p2))
 				print(response)
 				new_policy_goal = re.findall('<statement>(.*)</statement>', response.lower())
@@ -137,7 +137,7 @@ if __name__ == "__main__":
 				domain, statement_limit=searchable_policy_goals, generation_method=PolicyStatementMethod.CHAINING)
 		# Imported in main to prevent circular dependencies
 		from agents.policy_curation.policy_curation import PolicyCuration
-		policy_curator = PolicyCuration(model_config, list(human_sims.values()), policy_goals)
+		policy_curator = PolicyCuration(model_config, domain, list(human_sims.values()), policy_goals)
 		policy_votes, policy_goals = policy_curator.get_policy_goals(chosen_policy_goals)
 
 		with open('./agents/policy_curation/data/policy_voting.csv', 'w+', newline='', encoding='utf-8') as csvfile:
@@ -153,7 +153,7 @@ if __name__ == "__main__":
 						csv_writer.writerow([policy_goal_type, policy, votes, popularity])
 		policy_refinement = PolicyRefinement(model_config, domain, list(human_sims.values()))
 		new_policy_goals = policy_refinement.update_policy_goals(policy_votes, policy_goals)
-		policy_curator = PolicyCuration(model_config, list(human_sims.values()), new_policy_goals)
+		policy_curator = PolicyCuration(model_config, domain, list(human_sims.values()), new_policy_goals)
 		policy_votes, policy_goals = policy_curator.get_policy_goals(chosen_policy_goals)
 		with open('./agents/policy_curation/data/policy_voting_after_iteration.csv', 'w+', newline='', encoding='utf-8') as csvfile:
 			csv_writer = csv.writer(csvfile)

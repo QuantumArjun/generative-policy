@@ -27,7 +27,7 @@ class PolicyCurationtMethod(Enum):
 
 
 class PolicyCuration(Agent):
-		def __init__(self, model_config, digital_representatives: list = [], policy_goals: list = []):
+		def __init__(self, model_config, domain, digital_representatives: list = [], policy_goals: list = []):
 				"""
 				Initializes the Policy Curation agent with the given model configuration.
 
@@ -35,7 +35,7 @@ class PolicyCuration(Agent):
 					model_config: The configuration for the model.
 				"""
 				self.prompts = PromptsForPolicyCuration()
-				system_prompt = self.prompts.get_system_prompt()
+				system_prompt = self.prompts.get_system_prompt(domain)
 				super().__init__(model_config=model_config, system_prompt=system_prompt)
 				self.logger = logging.getLogger(__name__)
 				self.digital_representatives = digital_representatives
@@ -77,9 +77,10 @@ class PolicyCuration(Agent):
 
 				return vote_matrix
 
-		def get_popular_policy_goals(self, policy_votes: dict, num_goals: int = 2) -> list:
+		def get_popular_policy_goals(self, policy_votes: dict, pop_thresh: float = 0.75) -> list:
 				vote_matrix = self.get_vote_matrix(policy_votes)
-				popular_indices = np.argsort(np.sum(vote_matrix, axis=0))[::-1][:num_goals]
+				popular_indices = np.argwhere(np.mean(vote_matrix, axis=0) > pop_thresh)
+				popular_indices = np.reshape(popular_indices, [-1]) # Flatten [-1, 1] to [-1]
 				return [list(policy_votes.keys())[i] for i in popular_indices]
 
 		def get_controversial_policy_goals(self, policy_votes: dict, num_goals: int = 2) -> list:
@@ -100,13 +101,15 @@ class PolicyCuration(Agent):
 				self,
 				num_goals_to_choose: int,
 				policy_curation_method=PolicyCurationtMethod.ALL_POLICIES,
-				min_contentious_corr: float = -0.5
+				num_cont_policies: int = 10,
+				min_pop_thresh: float = 0.75,
+				min_contentious_corr: float = -0.5,
 		) -> dict:
 				policy_goals = self.choose_policy_goals(num_goals_to_choose, policy_curation_method)
 				print("Policy Goals 2", policy_goals[0])
 				policy_votes = self.vote_on_policy(policy_goals)
-				pop_policies = self.get_popular_policy_goals(policy_votes, num_goals_to_choose // 3)
-				cont_policies = self.get_controversial_policy_goals(policy_votes, num_goals_to_choose // 3)
+				cont_policies = self.get_controversial_policy_goals(policy_votes, num_cont_policies)
+				pop_policies = self.get_popular_policy_goals(policy_votes, min_pop_thresh)
 				cont_pairs = self.get_contentious_policy_goals(policy_votes, min_corr=min_contentious_corr)
 				policy_goals = {"popular": pop_policies, "controversial": cont_policies, "contentious": cont_pairs}
 				return policy_votes, policy_goals
@@ -144,7 +147,7 @@ if __name__ == "__main__":
 		policy_goals = policy_goals_gen.create_policy_statements(
 				domain, statement_limit=searchable_policy_goals, generation_method=PolicyStatementMethod.CHAINING)
 
-		policy_curator = PolicyCuration(model_config, list(human_sims.values()), policy_goals)
+		policy_curator = PolicyCuration(model_config, domain, list(human_sims.values()), policy_goals)
 		policy_votes, policy_goals = policy_curator.get_policy_goals(chosen_policy_goals)
 
 		with open('./agents/policy_curation/data/policy_voting.csv', 'w+', newline='', encoding='utf-8') as csvfile:
