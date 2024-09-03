@@ -303,8 +303,16 @@ class PromptsForPolicyStatementGenerator:
             Give these current policy (objectives, strategy) pairs: {', '.join(statement_list)}
             and the new policy (objective, strategy) pair: {policy_statement}
             output true if the new policy (objective, strategy) pair is different than all of the current policy pairs, or false if it is a duplicate.
-            Also output false if the policy (objective, strategy) pair is not valid, where valid means it adheres to defined criteria for policy objectives and strategies 
-            Output only one of two words: 'true' or 'false'.
+            
+            Use the following criteria to determine if it's a duplicate: 
+            - The new policy (objective, strategy) pair is allowed to have the same objective, but not the same (objective, strategy) as another pair in the list.
+            - The new policy (objective, strategy) may be different from another pair in the list, but would have the same effect as another policy (objective, strategy) pair in the list. For example, if the new policy would "partner with mental health organizations to create and disseminate positive online content that encourages healthy self-image and wellbeing", and another policy already in the list would "partner with mental health organizations to integrate resource-sharing features directly into popular social media platforms targeting children", consider this as a duplicate, since the generated policy would have the same effect as the other policy.
+            
+            Also output false if the new policy (objective, strategy) pair is not valid, where valid means it adheres to defined criteria for policy objectives and strategies. 
+            
+            Think step by step, first finding the most similar policies in the list to the new policy, and then compare the new policy with each of those policies, seeing if it is a duplicate.
+            
+            After reasoning if the new policy is a duplicate, output only one of two words: 'true' or 'false', surrounded by <answer>. For example, every output should end with <answer>true</answer>, or <answer>false</answer>.
             """
 
 

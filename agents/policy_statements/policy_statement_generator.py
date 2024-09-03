@@ -289,7 +289,8 @@ class PolicyStatementGenerator(Agent):
             user_message = self.prompts.get_uniqueness_user_message_prompt(statement_list_chunk, policy_statement)
             response = LLMWrapper(self.model_config).generate_text(
                 system_prompt=uniqueness_system_prompt, user_message=user_message)
-            if response.lower() == "false":
+            answer = re.findall('<answer>(.*)</answer>', response)
+            if answer.lower() == "false":
                 return False
         return True
 
