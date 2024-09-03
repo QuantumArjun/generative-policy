@@ -26,7 +26,44 @@ def batch_create_agents(agent_class, system_prompts, model_config, *args, **kwar
         agents.append(agent)
     return agents
 
-def batch_save_agents(agents: List[Agent]):
+def batch_save_agents(agents: List[Agent], folder_name: str = None):
+    """
+    Batch save agents to files in a new folder for each batch.
+    Folder naming follows 'saved_agents_batch_X' where X is an incrementing integer.
+    :param agents: List of agents to save
+    """
+    folder_path = None 
+    
+    if folder_name is None:
+        base_folder = os.path.join(os.getcwd(), "saved_agents")
+        if not os.path.exists(base_folder):
+            os.makedirs(base_folder, exist_ok=True)
+
+        # Find the highest existing batch number
+        max_batch_number = -1
+        for folder_name in os.listdir(base_folder):
+            if folder_name.startswith("batch_"):
+                try:
+                    batch_number = int(folder_name.split('_')[-1])
+                    if batch_number > max_batch_number:
+                        max_batch_number = batch_number
+                except ValueError:
+                    continue  # Skip folders with non-integer suffixes
+
+        # Create a new folder for the current batch
+        new_batch_number = max_batch_number + 1
+        folder_path = os.path.join(base_folder, f"batch_{new_batch_number}")
+        os.makedirs(folder_path, exist_ok=True)
+    
+    else:
+        folder_path = folder_name
+
+    # Save each agent in the new folder
+    for i, agent in enumerate(agents):
+        agent_path = os.path.join(folder_path, f"agent_{i}.json")
+        agent.save_agent(agent_path)
+
+def batch_save_humans(agents: List[Agent]):
     """
     Batch save agents to files in a new folder for each batch.
     Folder naming follows 'saved_agents_batch_X' where X is an incrementing integer.
@@ -54,8 +91,10 @@ def batch_save_agents(agents: List[Agent]):
 
     # Save each agent in the new folder
     for i, agent in enumerate(agents):
-        agent_path = os.path.join(folder_path, f"agent_{i}.json")
+        agent_path = os.path.join(folder_path, f"human_{i}.json")
         agent.save_agent(agent_path)
+    
+    return folder_path
 
 def batch_load_agents(batch_folder: str):
     """
@@ -65,9 +104,24 @@ def batch_load_agents(batch_folder: str):
     """
     agents = []
     for file_name in os.listdir(batch_folder):
-        file_path = os.path.join(batch_folder, file_name)
-        agent = Agent(load_from=file_path)
-        agents.append(agent)
+        if file_name.startswith("agent_"):
+            file_path = os.path.join(batch_folder, file_name)
+            agent = Agent(load_from=file_path)
+            agents.append(agent)
+    return agents
+
+def batch_load_humans(batch_folder: str):
+    """
+    Batch load agents from a folder
+    :param batch_folder: The folder containing the agents
+    :return: List of agents
+    """
+    agents = []
+    for file_name in os.listdir(batch_folder):
+        if file_name.startswith("human_"):
+            file_path = os.path.join(batch_folder, file_name)
+            agent = Agent(load_from=file_path)
+            agents.append(agent)
     return agents
 
 def batch_create_representatives(agent_list: List[Agent], model_config: Config) -> List[DigitalRepresentative]:

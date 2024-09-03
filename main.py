@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from agents.persona_generator import PersonaGenerator
 from agents.persona_sampler import PersonaSampler
 from config import Config
-from utils.agent_helper import batch_create_agents, batch_save_agents, batch_load_agents, print_agents, batch_create_representatives
+from utils.agent_helper import batch_create_agents, batch_save_agents, batch_save_humans, batch_load_agents, batch_load_humans, print_agents, batch_create_representatives
 from agents.agent import Agent
 from agents.human_simul import HumanSimulator
 from agents.policy_statements.policy_statement_generator import PolicyStatementGenerator, PolicyStatementMethod
@@ -16,6 +16,7 @@ from agents.policy_curation.policy_curation import PolicyCuration
 from agents.policy_curation.policy_refinement import PolicyRefinement
 from agents.policymaker import Policymaker, ScoringSystem
 from agents.digital_representative import DigitalRepresentative
+from evals.representative_comparison import RepresentativeComparison
 from utils.name_generator import NameGenerator
 from environments.elicitation import ElicitationEnvironment
 
@@ -26,6 +27,7 @@ if __name__ == "__main__":
     model_config = Config(model_type="OpenAI", model_name="gpt-4o")
     domain = "How Might We Make Gun Laws More Effective in the United States?"
     key_question = "What is your opinion on gun control in America?"
+    num_to_choose = 20
 
     #------------------------------------------------------------------------------
     # Step 1: Personas. 
@@ -33,24 +35,27 @@ if __name__ == "__main__":
 
     print("Creating personas...")
     # persona_list = PersonaGenerator(domain=domain, model_config=model_config, num_personas=5).generate_personas()
-    
     persona_list = PersonaSampler(num_to_sample=5, dataset="oqa_guns").sample_personas()
-    agent_list = batch_create_agents(agent_class=HumanSimulator, model_config=model_config, system_prompts=persona_list)
-    
+    base_humans = batch_create_agents(agent_class=HumanSimulator, model_config=model_config, system_prompts=persona_list)
     print("Personas created!\n")
     
-    # agent_list = batch_load_agents("saved_agents/batch_10")
+    # Save Resulting Agents
+    save_path = batch_save_humans(base_humans)
     #------------------------------------------------------------------------------
     
     #------------------------------------------------------------------------------
     # Step 2: Policy Statement Generation
     # Code to create initial set of policy statements
     
+    # Load Resulting Agents
+    persona_list = batch_load_humans(save_path)
+    print("Recreating base humans...")
+    base_humans = batch_create_agents(agent_class=HumanSimulator, model_config=model_config, system_prompts=persona_list)
+    
     print("Creating Policy Statements...")
     policy_statement_agent = PolicyStatementGenerator(model_config)
-    initial_statements = policy_statement_agent.create_policy_statements(domain, statement_limit=75,
+    initial_statements = policy_statement_agent.create_policy_statements(domain, statement_limit=30,
                                                 generation_method=PolicyStatementMethod.PROBLEM)
-
     print("Policy Statements created!\n")
     
     
@@ -71,42 +76,35 @@ if __name__ == "__main__":
     
     
     # Create and run elicitation environment
-    print("Spinning up elicitation environment...")
-    
-    elicitation_environment = ElicitationEnvironment(domain=domain, initial_statements=initial_statements, instruction_model_config=model_config, questioner_model_config=model_config, agent_list=agent_list)
-    updated_agent_list = elicitation_environment.run_elicitation()
-    
-    print("Elicitation complete!\n")
+    # print("Spinning up elicitation environment...")
+    # elicitation_environment = ElicitationEnvironment(domain=domain, initial_statements=initial_statements, instruction_model_config=model_config, questioner_model_config=model_config, agent_list=base_humans)
+    # raw_representatives = elicitation_environment.run_elicitation()
+    # print("Elicitation complete!\n")
     
     # Save Resulting Agents
-    batch_save_agents(updated_agent_list)
+    # batch_save_agents(raw_representatives, save_path)
     #------------------------------------------------------------------------------
     
     #------------------------------------------------------------------------------
     # Step 4: Creating Digital Representatives
     
+    # Load agents
+    raw_representatives = batch_load_agents("saved_agents/batch_13")
+    
     print("Creating digital representatives...")
-    digital_representatives = batch_create_representatives(updated_agent_list, model_config)
+    digital_representatives = batch_create_representatives(raw_representatives, model_config)
     #------------------------------------------------------------------------------
     
     #------------------------------------------------------------------------------
     # Step 5: Creating Initial Vote Matrix
     
-    num_to_choose = 20
-    
     print("Running Initial Round of Votes...")
-    
-    print("Testing Initial Statements #1", initial_statements[0])
-    
     policy_curator = PolicyCuration(model_config, domain, list(digital_representatives.values()), initial_statements)
     policy_votes, policy_goals = policy_curator.get_policy_goals(num_to_choose)
-    
-    print("Testing Policy Goals #3", policy_goals["popular"][0])
-    
     print("Initial round of votes complete!\n")
     
+    
     #save policy goals and policy votes to file
-    #save policy goals to file
     with open('./agents/policy_curation/data/policy_goals.json', 'w+') as f:
         json.dump(policy_goals, f, indent=4)
     
@@ -122,6 +120,18 @@ if __name__ == "__main__":
                         votes = policy_votes.get(policy, [])
                     popularity = sum(votes) / len(votes)
                     csv_writer.writerow([policy_goal_type, policy, votes, popularity])
+    print("We have written to the file")
+    exit() 
+    #------------------------------------------------------------------------------
+    
+    #------------------------------------------------------------------------------
+    #Eval: Comparing the base human to the human representative on a set of policy statements
+    
+    comparisonEvaluator = RepresentativeComparison()
+    comparisonEvaluator.evaluate(base_humans, digital_representatives, policy_goals)
+    exit()
+    
+    
     #------------------------------------------------------------------------------
     
     #------------------------------------------------------------------------------

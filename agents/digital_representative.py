@@ -21,7 +21,7 @@ class DigitalRepresentative(Agent):
         Use the human's conversation to create a digital representative
         """
 
-        system_prompt = "You are trying to how a specific human might respond policies. The human you are trying to emulate has the following conversation history: \n. "
+        system_prompt = "You are trying to how a specific human might respond policies. The human you are trying to emulate has answered the following way in an interview: \n. "
         for message in human_agent.history:
             system_prompt += f"{message}\n"
         
@@ -37,7 +37,7 @@ class DigitalRepresentative(Agent):
         Returns:
             int: The rating of the opinion. 1 for agree, 0 for disagree, -1 for other.
         """
-        user_message = f"Based on your beliefs, please rate the following opinion: {opinion}. Output only one of two words, and nothing else: 'agree' or 'disagree'."
+        user_message = f"Based on the interview, please predict how the human would rate following opinion: {opinion}. Output only one of two words, and nothing else: 'agree' or 'disagree'. Be conservative with agree - only agree if you are very confident that the human would agree."
         response = self.respond(user_message=user_message, q_tag="<Someone Else's Opinion> ", a_tag="<Your Rating>")
 
         if response == "agree":
