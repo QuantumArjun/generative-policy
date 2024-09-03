@@ -97,7 +97,7 @@ if __name__ == "__main__":
     
     print("Testing Initial Statements #1", initial_statements[0])
     
-    policy_curator = PolicyCuration(model_config, list(digital_representatives.values()), initial_statements)
+    policy_curator = PolicyCuration(model_config, domain, list(digital_representatives.values()), initial_statements)
     policy_votes, policy_goals = policy_curator.get_policy_goals(num_to_choose)
     
     print("Testing Policy Goals #3", policy_goals["popular"][0])
@@ -162,7 +162,7 @@ if __name__ == "__main__":
         new_policy_goals = json.load(f)
     
     print("Running Policy Iteration...")
-    policy_curator = PolicyCuration(model_config, list(digital_representatives.values()), new_policy_goals)
+    policy_curator = PolicyCuration(model_config, domain, list(digital_representatives.values()), new_policy_goals)
     policy_votes, policy_goals = policy_curator.get_policy_goals(num_to_choose)
     
     with open('./agents/policy_curation/data/policy_voting_after_iteration.csv', 'w+', newline='', encoding='utf-8') as csvfile:
