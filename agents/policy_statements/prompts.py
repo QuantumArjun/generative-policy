@@ -37,11 +37,15 @@ class PromptsForPolicyStatementGenerator:
         - Time-bound: Indicating a timeframe for completion.
         - High-level: Avoiding detailed implementation steps.
         - Concise: Using clear and succinct language.
+        
+        Additionally, you should ensure that the generated policy objectives are diverse. You want to make sure that your policies capture the entire space of possible policies, even (and especially) those that might be unpopular or controversial. 
 
         Good Examples:
         <Statement>Objective: Reduce greenhouse gas emissions, Strategy: Invest in renewable energy infrastructure and promote energy efficiency.</Statement>
         <Statement>Objective: Reduce particulate matter pollution in urban areas, Strategy: Enhance public transportation systems.</Statement>
         <Statement>Objective: Increase organic farming practices, Strategy: Provide financial incentives and technical support for organic farmers.</Statement>
+        <Statement> Objective: Increase renewable energy production, Strategy: Mandate the shut down of fossil fuel power plants.</Statement>
+        <Statement>Objective: Make healthcare more affordable, Strategy: Nationalize healthcare and move to a single player system.</Statement>
         
         Bad Examples:
         <Statement>Objective: Make social media safer for children.</Statement> (Lacks policy strategy)
@@ -124,7 +128,8 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy axis prompt for policy statements
         """
-        return f"Each policy (objective, strategy) pair has to contribute to the following axis: {axis}."
+        return f"Each policy (objective, strategy) pair has to go either up or down this axis: {axis}. 
+                For example, if the policy is: Objective: Reduce greenhouse gas emissions, Strategy: Invest in renewable energy infrastructure and promote energy efficiency, and the axis is cost, then you should generate policies that either increase the cost or decrease the cost."
 
     def _get_policy_axes_prompt(self, axes):
         """
@@ -136,7 +141,8 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy axis prompt for policy statements
         """
-        return f"Each policy (objective, strategy) pair has to contribute to one of the following axis: {", ".join(axes)}."
+        return f"Each policy (objective, strategy) pair has to contribute to one of the following axis: {", ".join(axes)}. 
+                For example, if the policy is: Objective: Reduce greenhouse gas emissions, Strategy: Invest in renewable energy infrastructure and promote energy efficiency, and the axis is cost, then you should generate policies that either increase the cost or decrease the cost."
 
     def _get_policy_stakeholder_prompt(self, stakeholder):
         """
@@ -148,7 +154,8 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy stakeholder prompt for policy statements
         """
-        return f"Each policy (objective, strategy) pair has to be helping this stakeholder: {stakeholder}."
+        return f"Each policy (objective, strategy) pair has to be helping this stakeholder: {stakeholder}. 
+                 For example, if the policy is: Objective: Reduce greenhouse gas emissions, Strategy: Invest in renewable energy infrastructure and promote energy efficiency, and the stakeholder is fossil fuel companies, then you should generate policies that that a fossil fuel executive may write."
 
     def _get_policy_stakeholders_prompt(self, stakeholders):
         """
@@ -172,7 +179,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy problem prompt for policy statements
         """
-        return f"Each policy (objective, strategy) pair has to solve the following problem: {problem}."
+        return f"Each policy (objective, strategy) pair has to be an effective solution to the following problem: {problem}."
 
     def _get_policy_problems_prompt(self, problems):
         """

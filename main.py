@@ -24,7 +24,7 @@ if __name__ == "__main__":
     load_dotenv(dotenv_path='/.env')
 
     model_config = Config(model_type="OpenAI", model_name="gpt-4o")
-    domain = "Gun Control in America"
+    domain = "How Might We Make Gun Laws More Effective in the United States?"
     key_question = "What is your opinion on gun control in America?"
 
     #------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     
     print("Creating Policy Statements...")
     policy_statement_agent = PolicyStatementGenerator(model_config)
-    initial_statements = policy_statement_agent.create_policy_statements("Gun Legislation in the United States", statement_limit=75,
+    initial_statements = policy_statement_agent.create_policy_statements(domain, statement_limit=75,
                                                 generation_method=PolicyStatementMethod.PROBLEM)
 
     print("Policy Statements created!\n")
@@ -76,9 +76,10 @@ if __name__ == "__main__":
     elicitation_environment = ElicitationEnvironment(domain=domain, initial_statements=initial_statements, instruction_model_config=model_config, questioner_model_config=model_config, agent_list=agent_list)
     updated_agent_list = elicitation_environment.run_elicitation()
     
-    batch_save_agents(updated_agent_list)
-    
     print("Elicitation complete!\n")
+    
+    # Save Resulting Agents
+    batch_save_agents(updated_agent_list)
     #------------------------------------------------------------------------------
     
     #------------------------------------------------------------------------------
