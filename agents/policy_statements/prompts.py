@@ -152,7 +152,7 @@ class PromptsForPolicyStatementGenerator:
         Returns:
             str: The policy stakeholder prompt for policy statements
         """
-        return f"Each policy (objective, strategy) pair has to be helping this stakeholder: {stakeholder}. For example, if the policy is: Objective: Reduce greenhouse gas emissions, Strategy: Invest in renewable energy infrastructure and promote energy efficiency, and the stakeholder is fossil fuel companies, then you should generate policies that that a fossil fuel executive may write."
+        return f"Each policy (objective, strategy) pair has to be helping this/these stakeholder(s): {stakeholder}. For example, if the policy is: Objective: Reduce greenhouse gas emissions, Strategy: Invest in renewable energy infrastructure and promote energy efficiency, and the stakeholder is fossil fuel companies, then you should generate policies that that a fossil fuel executive may write."
 
     def _get_policy_stakeholders_prompt(self, stakeholders):
         """
@@ -233,7 +233,6 @@ class PromptsForPolicyStatementGenerator:
         return f"""
         {self._get_policy_statement_explanation_prompt()}
         {self._get_domain_prompt(domain)}
-        {self._get_generated_policy_statements_prompt(policy_set)}
         {self._get_policy_axis_prompt(axis)}
         {self._get_generated_policy_statements_prompt(policy_set)}
         {self._get_formatting_prompt()}
@@ -252,7 +251,6 @@ class PromptsForPolicyStatementGenerator:
         return f"""
         {self._get_policy_statement_explanation_prompt()}
         {self._get_domain_prompt(domain)}
-        {self._get_generated_policy_statements_prompt(policy_set)}
         {self._get_policy_axes_prompt(axes)}
         {self._get_policy_stakeholder_prompt(stakeholder)}
         {self._get_generated_policy_statements_prompt(policy_set)}
@@ -272,7 +270,6 @@ class PromptsForPolicyStatementGenerator:
         return f"""
         {self._get_policy_statement_explanation_prompt()}
         {self._get_domain_prompt(domain)}
-        {self._get_generated_policy_statements_prompt(policy_set)}
         {self._get_policy_axes_prompt(axes)}
         {self._get_policy_stakeholder_prompt(stakeholders)}
         {self._get_policy_problem_prompt(problem)}
@@ -315,5 +312,27 @@ class PromptsForPolicyStatementGenerator:
 
 if __name__ == "__main__":
     # python3 agents/policy_statements/prompts.py
-    print(PromptsForPolicyStatementGenerator().get_system_prompt("Social Media and Child Safety"))
-    print(PromptsForPolicyStatementGenerator().get_user_messsage_base("Social Media and Child Safety"))
+    import textwrap
+
+    prompts = PromptsForPolicyStatementGenerator()
+    domain_name = "<DOMAIN>"
+    axes_names = ["<AXIS_0>", "<AXIS_1>", "...", "<AXIS_N>"]
+    stakeholders_name = ["<STAKEHOLDER_0>", "<STAKEHOLDER_1>", "...", "<STAKEHOLDER_M>"]
+    problem_name = "<PROBLEM_0>"
+    policy_set = ["<OBJECTIVE_STRATEGY_PAIR_0>", "<OBJECTIVE_STRATEGY_PAIR_1>", "...", "<OBJECTIVE_STRATEGY_PAIR_L>"]
+
+    print("Phase 1 - Policy Generation ")
+    print("System Prompt: ")
+    print(textwrap.dedent(prompts.get_system_prompt(domain_name)))
+
+    print("\n\n\n\nBase Policy Generation Prompt: ")
+    print(textwrap.dedent(prompts.get_user_messsage_base(domain_name)))
+
+    print("\n\n\n\nAxis Policy Generation Prompt: ")
+    print(textwrap.dedent(prompts.get_user_message_along_axis(domain_name, policy_set, axes_names[0])))
+
+    print("\n\n\n\nStakeholder+Axis Generation Prompt: ")
+    print(textwrap.dedent(prompts.get_user_message_along_axis_and_stakeholder(domain_name, policy_set, axes_names, stakeholders_name[0])))
+
+    print("\n\n\n\nStakeholder+Axis+Problem Generation Prompt: ")
+    print(textwrap.dedent(prompts.get_user_message_along_axis_and_stakeholder_and_problems(domain_name, policy_set, axes_names, stakeholders_name, problem_name)))

@@ -82,3 +82,48 @@ class PromptsForPolicyRefinment:
         {prompts._get_formatting_prompt()}
         """
 
+
+if __name__ == "__main__":
+    # python3 agents/policy_curation/prompts.py
+    import textwrap
+
+    prompts_curation = PromptsForPolicyCuration()
+    prompts_refinement = PromptsForPolicyRefinment()
+
+    domain = "<DOMAIN>"
+
+    policy_0 = "<POLICY_0>"
+    policy_1 = "<POLICY_1>"
+    policy_2 = "<POLICY_2>"
+
+    feedback = ["<FEEDBACK_0>", "<FEEDBACK_1>", "...", "<FEEDBACK_N>"]
+
+    print("Phase 2 - Preference Elicitation ")
+
+    print("System Prompt For Policy Curation: ")
+    print(textwrap.dedent(prompts_curation.get_system_prompt(domain)))
+
+    print("Phase 3 - Policy Refinement Using Simulated Human Feedback ")
+
+
+    print("System Prompt For Policy Refinement: ")
+    print(textwrap.dedent(prompts_refinement.get_system_prompt(domain)))
+
+
+    print("Prompts for Policy Refinement:")
+    print("System Prompt:")
+    system_prompt_refinement = prompts_refinement.get_system_prompt(domain)
+    print(textwrap.dedent(system_prompt_refinement))
+
+    print("\n\n\n\nContentious Policy Prompt: ")
+
+    contentious_prompt = prompts_refinement.get_contentious_policy_prompt(domain, policy_0, policy_1)
+    print(textwrap.dedent(contentious_prompt))
+
+    print("\n\n\n\nFeedback Prompt: ")
+    feedback_prompt = prompts_refinement.get_feedback_prompt(domain, policy_1)
+    print(textwrap.dedent(feedback_prompt))
+
+    print("\n\n\n\nRefinement Prompt:")
+    refinement_prompt = prompts_refinement.get_refinement_prompt(domain, policy_0, feedback)
+    print(textwrap.dedent(refinement_prompt))
